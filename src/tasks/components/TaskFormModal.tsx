@@ -195,6 +195,15 @@ export function TaskFormModal({
         icon: <IconCheck size={18} />,
         autoClose: 3000,
       })
+      if (typeof pendo !== 'undefined') {
+        pendo.track('task_created', {
+          status: values.status,
+          priority: values.priority,
+          assigneeId: values.assignee?.id,
+          hasDueDate: values.dueDate !== null,
+          hasDescription: values.description.trim().length > 0,
+        })
+      }
     } else if (initialTask) {
       updateTask(workspaceId, initialTask.id, values)
       notifications.show({
@@ -204,6 +213,24 @@ export function TaskFormModal({
         icon: <IconCheck size={18} />,
         autoClose: 3000,
       })
+      if (typeof pendo !== 'undefined') {
+        const changed: string[] = []
+        if (values.title !== initialTask.title) changed.push('title')
+        if (values.description !== initialTask.description) changed.push('description')
+        if (values.status !== initialTask.status) changed.push('status')
+        if (values.priority !== initialTask.priority) changed.push('priority')
+        if (values.assignee?.id !== initialTask.assignee?.id) changed.push('assignee')
+        if (values.dueDate !== initialTask.dueDate) changed.push('dueDate')
+        pendo.track('task_updated', {
+          taskId: initialTask.id,
+          status: values.status,
+          priority: values.priority,
+          assigneeId: values.assignee?.id,
+          hasDueDate: values.dueDate !== null,
+          hasDescription: values.description.trim().length > 0,
+          fieldsChanged: changed.join(', '),
+        })
+      }
     }
     onSuccess()
     onClose()

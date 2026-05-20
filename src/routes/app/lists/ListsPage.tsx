@@ -149,6 +149,14 @@ export function ListsPage(): React.JSX.Element {
                   // fall back to 'todo' for legacy tasks without prevStatus.
                   status: nextDone ? 'done' : (task.prevStatus ?? 'todo'),
                 })
+                if (nextDone && typeof pendo !== 'undefined') {
+                  pendo.track('task_completed', {
+                    taskId: task.id,
+                    previousStatus: task.status,
+                    priority: task.priority,
+                    assigneeId: task.assignee?.id,
+                  })
+                }
                 refresh()
               }}
             />
@@ -195,6 +203,13 @@ export function ListsPage(): React.JSX.Element {
               icon: <IconTrash size={18} />,
               autoClose: 3000,
             })
+            if (typeof pendo !== 'undefined') {
+              pendo.track('task_deleted', {
+                taskId: deleteTarget.id,
+                taskStatus: deleteTarget.status,
+                taskPriority: deleteTarget.priority,
+              })
+            }
             refresh()
           }
         }}

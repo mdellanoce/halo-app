@@ -104,6 +104,21 @@ export function ProfileTab(): React.JSX.Element | null {
         icon: <IconCheck size={18} />,
         autoClose: 3000,
       })
+      const changed: string[] = []
+      if (values.firstName !== visitor.firstName) changed.push('firstName')
+      if (values.lastName !== visitor.lastName) changed.push('lastName')
+      if (values.username !== visitor.username) changed.push('username')
+      if (values.jobTitle !== visitor.jobTitle) changed.push('jobTitle')
+      if (values.role !== visitor.role) changed.push('role')
+      if (values.location !== visitor.location) changed.push('location')
+      if (typeof pendo !== 'undefined') {
+        pendo.track('profile_updated', {
+          fieldsChanged: changed.join(', '),
+          role: values.role,
+          jobTitle: values.jobTitle,
+          location: values.location,
+        })
+      }
       // Re-base form's defaultValues so isDirty flips back to false until
       // the next edit. Without this, Save would stay enabled after a save.
       form.reset(values)
