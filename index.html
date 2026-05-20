@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halo</title>
+    <!-- Mantine ColorSchemeScript (auto): sets data-mantine-color-scheme on <html>
+         before paint to prevent dark-mode FOUC. SPA-only (no SSR), so this inline
+         script is the equivalent of Mantine v9's <ColorSchemeScript defaultColorScheme="auto" />.
+         Resolution order:
+           1. localStorage['mantine-color-scheme-value']  ('light' | 'dark' | 'auto')
+           2. If absent or 'auto': window.matchMedia('(prefers-color-scheme: dark)')
+           3. Else: 'light'
+         Wrapped in IIFE + try/catch — private-browsing environments throw on
+         localStorage.getItem access (T-04-01-02). -->
+    <script>
+      (function () {
+        try {
+          var stored = null;
+          try { stored = window.localStorage.getItem('mantine-color-scheme-value'); } catch (e) { stored = null; }
+          var scheme = stored;
+          if (scheme !== 'light' && scheme !== 'dark') {
+            scheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-mantine-color-scheme', scheme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-mantine-color-scheme', 'light');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
