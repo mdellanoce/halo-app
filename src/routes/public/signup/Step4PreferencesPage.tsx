@@ -173,6 +173,21 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // halo:v1:session and updates the in-memory store atomically.
       useAuthStore.getState().signInFromVisitor(visitor, workspace)
 
+      // Track signup completion with profile and workspace metadata.
+      pendo.track('signup_completed', {
+        primaryUseCase: step4Values.primaryUseCase,
+        teamSize: step4Values.teamSize,
+        topGoals: step4Values.topGoals.join(', '),
+        jobTitle: s2.jobTitle,
+        role: s2.role,
+        yearsExperience: s2.yearsExperience,
+        location: s2.location,
+        companyName: s3.companyName,
+        companySize: s3.companySize,
+        industry: s3.industry,
+        planTier: s3.planTier,
+      })
+
       // Clear the wizard draft — the plaintext-password retention window
       // (T-02-17) ends here. sessionStorage[halo:v1:signup:draft] is removed.
       clearWizardDraft()

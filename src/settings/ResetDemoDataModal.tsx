@@ -81,6 +81,13 @@ export type ResetDemoDataModalProps = {
 
 export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps): React.JSX.Element {
   const handleReset = () => {
+    // Track the reset event before wiping data.
+    const keysCount = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i))
+      .filter((k) => k && k.startsWith('halo:v')).length
+    pendo.track('demo_data_reset', {
+      keysRemoved: keysCount,
+    })
+
     // 1. Bulk-wipe halo:v* prefix keys from localStorage.
     //
     // Deliberate exception to FND-04 codec rule (S6): bulk wipe by prefix needs

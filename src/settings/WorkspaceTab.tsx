@@ -96,6 +96,18 @@ export function WorkspaceTab(): React.JSX.Element | null {
     const updated = updateWorkspace(workspace.id, values)
     if (updated) {
       useAuthStore.setState({ currentWorkspace: updated })
+      const fieldsChanged: string[] = []
+      if (values.companyName !== workspace.companyName) fieldsChanged.push('companyName')
+      if (values.companySize !== workspace.companySize) fieldsChanged.push('companySize')
+      if (values.industry !== workspace.industry) fieldsChanged.push('industry')
+      if (values.planTier !== workspace.planTier) fieldsChanged.push('planTier')
+      pendo.track('workspace_updated', {
+        fieldsChanged: fieldsChanged.join(', '),
+        planTier: values.planTier,
+        previousPlanTier: workspace.planTier,
+        companySize: values.companySize,
+        industry: values.industry,
+      })
       notifications.show({
         title: 'Workspace saved',
         message: '',
@@ -104,8 +116,6 @@ export function WorkspaceTab(): React.JSX.Element | null {
         autoClose: 3000,
       })
       form.reset(values)
-      // SET-05 deferred to Phase 6 — pendo.identify (or pendo.updateOptions
-      // for account metadata) slots in here once PendoBridge is real.
     } else {
       notifications.show({
         title: 'Something went wrong',

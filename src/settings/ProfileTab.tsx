@@ -97,6 +97,16 @@ export function ProfileTab(): React.JSX.Element | null {
     const updated = updateVisitor(visitor.id, values)
     if (updated) {
       useAuthStore.setState({ currentVisitor: updated })
+      const fieldsChanged: string[] = []
+      if (values.firstName !== visitor.firstName) fieldsChanged.push('firstName')
+      if (values.lastName !== visitor.lastName) fieldsChanged.push('lastName')
+      if (values.username !== visitor.username) fieldsChanged.push('username')
+      if (values.jobTitle !== visitor.jobTitle) fieldsChanged.push('jobTitle')
+      if (values.role !== visitor.role) fieldsChanged.push('role')
+      if (values.location !== visitor.location) fieldsChanged.push('location')
+      pendo.track('profile_updated', {
+        fieldsChanged: fieldsChanged.join(', '),
+      })
       notifications.show({
         title: 'Profile saved',
         message: '',
@@ -107,9 +117,6 @@ export function ProfileTab(): React.JSX.Element | null {
       // Re-base form's defaultValues so isDirty flips back to false until
       // the next edit. Without this, Save would stay enabled after a save.
       form.reset(values)
-      // SET-05 (pendo.identify on save) deferred to Phase 6 per CONTEXT.md —
-      // Phase 6 drops the pendo.identify call into this success branch
-      // alongside notifications.show.
     } else {
       notifications.show({
         title: 'Something went wrong',

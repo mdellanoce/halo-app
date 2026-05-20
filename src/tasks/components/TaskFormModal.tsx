@@ -188,6 +188,13 @@ export function TaskFormModal({
   const onSubmit = form.handleSubmit((values) => {
     if (mode === 'create') {
       createTask(workspaceId, { ...values, completedAt: null })
+      pendo.track('task_created', {
+        status: values.status,
+        priority: values.priority,
+        hasAssignee: Boolean(values.assignee?.id),
+        hasDueDate: values.dueDate !== null,
+        hasDescription: values.description.length > 0,
+      })
       notifications.show({
         title: 'Task created',
         message: '',
@@ -197,6 +204,21 @@ export function TaskFormModal({
       })
     } else if (initialTask) {
       updateTask(workspaceId, initialTask.id, values)
+      const fieldsChanged: string[] = []
+      if (values.title !== initialTask.title) fieldsChanged.push('title')
+      if (values.description !== initialTask.description) fieldsChanged.push('description')
+      if (values.status !== initialTask.status) fieldsChanged.push('status')
+      if (values.priority !== initialTask.priority) fieldsChanged.push('priority')
+      if (values.assignee?.id !== initialTask.assignee?.id) fieldsChanged.push('assignee')
+      if (values.dueDate !== initialTask.dueDate) fieldsChanged.push('dueDate')
+      pendo.track('task_updated', {
+        status: values.status,
+        priority: values.priority,
+        hasAssignee: Boolean(values.assignee?.id),
+        hasDueDate: values.dueDate !== null,
+        hasDescription: values.description.length > 0,
+        fieldsChanged: fieldsChanged.join(', '),
+      })
       notifications.show({
         title: 'Changes saved',
         message: '',

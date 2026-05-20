@@ -110,6 +110,11 @@ export function InviteTeammateModal({
       avatar: null,
     })
 
+    pendo.track('teammate_invited', {
+      workspaceRole: values.workspaceRole,
+      emailDomain: values.email.split('@')[1]?.toLowerCase() ?? '',
+    })
+
     notifications.show({
       title: 'Invite sent',
       message: `Sent to ${values.email}`,
