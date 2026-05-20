@@ -117,6 +117,13 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
     //    key deliberately preserved across the reset because Mantine owns it
     //    and it lives outside the halo:v* envelope by design.
 
+    // Track demo data reset in Pendo before the hard reload destroys JS context.
+    if (typeof pendo !== 'undefined') {
+      pendo.track('demo_data_reset', {
+        keysRemoved: keysToRemove.length,
+      })
+    }
+
     // 4. Hard reload — re-runs boot sequence with clean state.
     window.location.href = '/'
   }

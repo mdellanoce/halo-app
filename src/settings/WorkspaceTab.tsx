@@ -103,6 +103,23 @@ export function WorkspaceTab(): React.JSX.Element | null {
         icon: <IconCheck size={18} />,
         autoClose: 3000,
       })
+      if (typeof pendo !== 'undefined') {
+        const fieldsChanged: string[] = []
+        const defaults = form.formState.defaultValues
+        if (defaults) {
+          if (values.companyName !== defaults.companyName) fieldsChanged.push('companyName')
+          if (values.companySize !== defaults.companySize) fieldsChanged.push('companySize')
+          if (values.industry !== defaults.industry) fieldsChanged.push('industry')
+          if (values.planTier !== defaults.planTier) fieldsChanged.push('planTier')
+        }
+        pendo.track('workspace_updated', {
+          fieldsChanged: fieldsChanged.join(', '),
+          companyName: values.companyName,
+          companySize: values.companySize,
+          industry: values.industry,
+          planTier: values.planTier,
+        })
+      }
       form.reset(values)
       // SET-05 deferred to Phase 6 — pendo.identify (or pendo.updateOptions
       // for account metadata) slots in here once PendoBridge is real.
