@@ -149,6 +149,12 @@ export function ListsPage(): React.JSX.Element {
                   // fall back to 'todo' for legacy tasks without prevStatus.
                   status: nextDone ? 'done' : (task.prevStatus ?? 'todo'),
                 })
+                if (!nextDone) {
+                  pendo.track('task_uncompleted', {
+                    restoredStatus: task.prevStatus ?? 'todo',
+                    taskPriority: task.priority,
+                  })
+                }
                 refresh()
               }}
             />
