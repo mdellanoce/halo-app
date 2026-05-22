@@ -94,6 +94,12 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
       const key = localStorage.key(i)
       if (key && key.startsWith('halo:v')) keysToRemove.push(key)
     }
+    // Pendo Track Event: demo_data_reset (fire before wipe so pendo agent is still live)
+    if (typeof pendo !== 'undefined') {
+      pendo.track('demo_data_reset', {
+        keysRemoved: keysToRemove.length,
+      })
+    }
     keysToRemove.forEach((k) => localStorage.removeItem(k))
     // At this exact moment: zero halo:v1:* keys remain in localStorage.
     // After the hard reload below, runMigrations() writes a fresh halo:v1:meta

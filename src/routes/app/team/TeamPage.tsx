@@ -49,7 +49,16 @@ export function TeamPage(): React.JSX.Element {
   if (!workspaceId || !visitor || !workspace) return <></>
 
   const handleRoleChange = (teammateId: string, nextRole: WorkspaceRole) => {
+    // Capture previous role before the update for Pendo metadata
+    const previousRole = teammates.find((t) => t.id === teammateId)?.workspaceRole
     updateTeammate(workspaceId, teammateId, { workspaceRole: nextRole })
+    // Pendo Track Event: teammate_role_changed
+    if (typeof pendo !== 'undefined') {
+      pendo.track('teammate_role_changed', {
+        newRole: nextRole,
+        previousRole: previousRole ?? '',
+      })
+    }
     notifications.show({
       title: 'Role updated',
       message: '',

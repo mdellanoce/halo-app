@@ -70,6 +70,12 @@ export function SignInPage(): React.JSX.Element {
       .getState()
       .signInWithCredentials(values.email, values.password)
     if (result.ok) {
+      // Pendo Track Event: signin_completed
+      if (typeof pendo !== 'undefined') {
+        pendo.track('signin_completed', {
+          method: 'email',
+        })
+      }
       navigate('/app', { replace: true })
       return
     }
@@ -77,6 +83,12 @@ export function SignInPage(): React.JSX.Element {
     // modes (Plan 02-05 collapses "user not found", "wrong password", and the
     // defensive "missing workspace" branch into one variant — username
     // enumeration mitigation T-02-45 at the API surface).
+    // Pendo Track Event: signin_failed
+    if (typeof pendo !== 'undefined') {
+      pendo.track('signin_failed', {
+        reason: result.reason,
+      })
+    }
     setCredError(result.reason)
   })
 

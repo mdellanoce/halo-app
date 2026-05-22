@@ -144,6 +144,20 @@ export function ListsPage(): React.JSX.Element {
               onEdit={(task) => setEditTask(task)}
               onDelete={(task) => setDeleteTarget(task)}
               onToggleComplete={(task, nextDone) => {
+                // Pendo Track Events: task_completed / task_uncompleted
+                if (typeof pendo !== 'undefined') {
+                  if (nextDone) {
+                    pendo.track('task_completed', {
+                      previousStatus: task.status,
+                      taskPriority: task.priority,
+                    })
+                  } else {
+                    pendo.track('task_uncompleted', {
+                      restoredStatus: task.prevStatus ?? 'todo',
+                      taskPriority: task.priority,
+                    })
+                  }
+                }
                 updateTask(workspaceId, task.id, {
                   // Off-toggle: restore prior non-done status if recorded;
                   // fall back to 'todo' for legacy tasks without prevStatus.
@@ -187,6 +201,13 @@ export function ListsPage(): React.JSX.Element {
         onClose={() => setDeleteTarget(null)}
         onConfirm={() => {
           if (deleteTarget) {
+            // Pendo Track Event: task_deleted
+            if (typeof pendo !== 'undefined') {
+              pendo.track('task_deleted', {
+                taskStatus: deleteTarget.status,
+                taskPriority: deleteTarget.priority,
+              })
+            }
             deleteTask(workspaceId, deleteTarget.id)
             notifications.show({
               title: 'Task deleted',

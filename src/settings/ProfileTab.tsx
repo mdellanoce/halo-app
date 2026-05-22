@@ -96,6 +96,19 @@ export function ProfileTab(): React.JSX.Element | null {
   const onSubmit = form.handleSubmit((values) => {
     const updated = updateVisitor(visitor.id, values)
     if (updated) {
+      // Pendo Track Event: profile_updated
+      if (typeof pendo !== 'undefined') {
+        const changed: string[] = []
+        if (values.firstName !== form.formState.defaultValues?.firstName) changed.push('firstName')
+        if (values.lastName !== form.formState.defaultValues?.lastName) changed.push('lastName')
+        if (values.username !== form.formState.defaultValues?.username) changed.push('username')
+        if (values.jobTitle !== form.formState.defaultValues?.jobTitle) changed.push('jobTitle')
+        if (values.role !== form.formState.defaultValues?.role) changed.push('role')
+        if (values.location !== form.formState.defaultValues?.location) changed.push('location')
+        pendo.track('profile_updated', {
+          fieldsChanged: changed.join(', '),
+        })
+      }
       useAuthStore.setState({ currentVisitor: updated })
       notifications.show({
         title: 'Profile saved',

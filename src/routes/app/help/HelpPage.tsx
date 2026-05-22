@@ -18,7 +18,7 @@
  * The flat sibling shape is explicitly accepted per UI-SPEC line 840.
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Stack, Title } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { listHelpArticles } from '../../../help/helpArticles'
@@ -33,6 +33,23 @@ export function HelpPage(): React.JSX.Element {
 
   // Read once at mount — static module is reload-stable via faker.seed(42) (D-09).
   const allArticles = useMemo(() => listHelpArticles(), [])
+
+  // Pendo Track Event: help_search_executed (fires after debounce settles)
+  useEffect(() => {
+    if (debouncedQuery.trim() === '') return
+    if (typeof pendo !== 'undefined') {
+      const needle = debouncedQuery.toLowerCase().trim()
+      const results = allArticles.filter((a) => {
+        const haystack = `${a.title} ${a.keywords.join(' ')} ${a.summary}`.toLowerCase()
+        return haystack.includes(needle)
+      })
+      pendo.track('help_search_executed', {
+        query: debouncedQuery.trim(),
+        resultsCount: results.length,
+        queryLength: debouncedQuery.trim().length,
+      })
+    }
+  }, [debouncedQuery, allArticles])
 
   const filtered = useMemo(() => {
     if (debouncedQuery.trim() === '') return allArticles

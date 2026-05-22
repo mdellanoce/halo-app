@@ -188,6 +188,16 @@ export function TaskFormModal({
   const onSubmit = form.handleSubmit((values) => {
     if (mode === 'create') {
       createTask(workspaceId, { ...values, completedAt: null })
+      // Pendo Track Event: task_created
+      if (typeof pendo !== 'undefined') {
+        pendo.track('task_created', {
+          status: values.status,
+          priority: values.priority,
+          hasAssignee: Boolean(values.assignee?.id),
+          hasDueDate: values.dueDate !== null,
+          hasDescription: values.description.trim().length > 0,
+        })
+      }
       notifications.show({
         title: 'Task created',
         message: '',
@@ -197,6 +207,24 @@ export function TaskFormModal({
       })
     } else if (initialTask) {
       updateTask(workspaceId, initialTask.id, values)
+      // Pendo Track Event: task_updated
+      if (typeof pendo !== 'undefined') {
+        const changed: string[] = []
+        if (values.title !== initialTask.title) changed.push('title')
+        if (values.description !== initialTask.description) changed.push('description')
+        if (values.status !== initialTask.status) changed.push('status')
+        if (values.priority !== initialTask.priority) changed.push('priority')
+        if (values.assignee?.id !== initialTask.assignee?.id) changed.push('assignee')
+        if (values.dueDate !== initialTask.dueDate) changed.push('dueDate')
+        pendo.track('task_updated', {
+          status: values.status,
+          priority: values.priority,
+          hasAssignee: Boolean(values.assignee?.id),
+          hasDueDate: values.dueDate !== null,
+          hasDescription: values.description.trim().length > 0,
+          fieldsChanged: changed.join(', '),
+        })
+      }
       notifications.show({
         title: 'Changes saved',
         message: '',

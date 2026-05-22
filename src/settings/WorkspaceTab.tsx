@@ -95,6 +95,21 @@ export function WorkspaceTab(): React.JSX.Element | null {
   const onSubmit = form.handleSubmit((values) => {
     const updated = updateWorkspace(workspace.id, values)
     if (updated) {
+      // Pendo Track Event: workspace_updated
+      if (typeof pendo !== 'undefined') {
+        const changed: string[] = []
+        if (values.companyName !== form.formState.defaultValues?.companyName) changed.push('companyName')
+        if (values.companySize !== form.formState.defaultValues?.companySize) changed.push('companySize')
+        if (values.industry !== form.formState.defaultValues?.industry) changed.push('industry')
+        if (values.planTier !== form.formState.defaultValues?.planTier) changed.push('planTier')
+        pendo.track('workspace_updated', {
+          fieldsChanged: changed.join(', '),
+          planTier: values.planTier,
+          previousPlanTier: form.formState.defaultValues?.planTier ?? '',
+          companySize: values.companySize,
+          industry: values.industry,
+        })
+      }
       useAuthStore.setState({ currentWorkspace: updated })
       notifications.show({
         title: 'Workspace saved',
