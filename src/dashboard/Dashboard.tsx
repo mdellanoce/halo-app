@@ -307,10 +307,12 @@ export function Dashboard(): React.JSX.Element {
             const previousTimeRange = range
             const timeRange = v as Range
             setRange(timeRange)
-            pendo.track('dashboard_time_range_changed', {
-              timeRange,
-              previousTimeRange,
-            })
+            if (typeof pendo !== 'undefined') {
+              pendo.track('dashboard_time_range_changed', {
+                timeRange,
+                previousTimeRange,
+              })
+            }
           }}
           data-pendo-id={PENDO_IDS.dashboard.timeRange}
         />
