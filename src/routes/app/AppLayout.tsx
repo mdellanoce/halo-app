@@ -92,6 +92,9 @@ export function AppLayout(): React.JSX.Element {
   const initials = `${visitor.firstName[0] ?? ''}${visitor.lastName[0] ?? ''}`.toUpperCase()
 
   const handleSignOut = async () => {
+    // Track sign-out before navigation destroys Pendo context.
+    window.pendo?.track('signout_completed')
+
     // Navigate first so RequireAuth doesn't intercept the synchronous
     // isAuthenticated:false flush from signOut() and bounce through /signin.
     navigate('/', { replace: true })

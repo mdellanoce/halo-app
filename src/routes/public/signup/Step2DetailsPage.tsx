@@ -75,6 +75,14 @@ export function Step2DetailsPage(): React.JSX.Element {
 
   const onSubmit = form.handleSubmit((values) => {
     writeWizardDraftStep('step2', values)
+
+    // Track step 2 completion in the signup funnel.
+    window.pendo?.track('signup_step_completed', {
+      stepNumber: 2,
+      stepName: 'details',
+      fieldsCompleted: ['jobTitle', 'role', 'yearsExperience', 'location'],
+    })
+
     navigate('/signup/company')
   })
 

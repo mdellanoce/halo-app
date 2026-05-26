@@ -93,6 +93,14 @@ export function Step3CompanyPage(): React.JSX.Element {
 
   const onSubmit = form.handleSubmit((values) => {
     writeWizardDraftStep('step3', values)
+
+    // Track step 3 completion in the signup funnel.
+    window.pendo?.track('signup_step_completed', {
+      stepNumber: 3,
+      stepName: 'company',
+      fieldsCompleted: ['companyName', 'companySize', 'industry', 'planTier'],
+    })
+
     navigate('/signup/preferences')
   })
 

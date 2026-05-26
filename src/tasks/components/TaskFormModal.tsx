@@ -195,6 +195,16 @@ export function TaskFormModal({
         icon: <IconCheck size={18} />,
         autoClose: 3000,
       })
+
+      // Track task creation for feature usage analytics.
+      window.pendo?.track('task_created', {
+        title: values.title,
+        status: values.status,
+        priority: values.priority,
+        assigneeName: values.assignee?.name ?? '',
+        hasDueDate: values.dueDate !== null,
+        hasDescription: values.description.length > 0,
+      })
     } else if (initialTask) {
       updateTask(workspaceId, initialTask.id, values)
       notifications.show({
@@ -203,6 +213,17 @@ export function TaskFormModal({
         color: 'green',
         icon: <IconCheck size={18} />,
         autoClose: 3000,
+      })
+
+      // Track task update to understand how users modify tasks after creation.
+      window.pendo?.track('task_updated', {
+        taskId: initialTask.id,
+        title: values.title,
+        status: values.status,
+        priority: values.priority,
+        assigneeName: values.assignee?.name ?? '',
+        hasDueDate: values.dueDate !== null,
+        hasDescription: values.description.length > 0,
       })
     }
     onSuccess()

@@ -70,6 +70,10 @@ export function SignInPage(): React.JSX.Element {
       .getState()
       .signInWithCredentials(values.email, values.password)
     if (result.ok) {
+      // Track successful sign-in for returning user engagement.
+      window.pendo?.track('signin_completed', {
+        email: values.email,
+      })
       navigate('/app', { replace: true })
       return
     }
@@ -78,6 +82,11 @@ export function SignInPage(): React.JSX.Element {
     // defensive "missing workspace" branch into one variant — username
     // enumeration mitigation T-02-45 at the API surface).
     setCredError(result.reason)
+
+    // Track failed sign-in attempt for funnel analysis.
+    window.pendo?.track('signin_failed', {
+      failureReason: result.reason,
+    })
   })
 
   return (

@@ -49,6 +49,8 @@ export function TeamPage(): React.JSX.Element {
   if (!workspaceId || !visitor || !workspace) return <></>
 
   const handleRoleChange = (teammateId: string, nextRole: WorkspaceRole) => {
+    const teammate = teammates.find((t) => t.id === teammateId)
+    const previousRole = teammate?.workspaceRole
     updateTeammate(workspaceId, teammateId, { workspaceRole: nextRole })
     notifications.show({
       title: 'Role updated',
@@ -57,6 +59,14 @@ export function TeamPage(): React.JSX.Element {
       icon: <IconCheck size={18} />,
       autoClose: 3000,
     })
+
+    // Track role changes for permission management analytics.
+    window.pendo?.track('teammate_role_changed', {
+      teammateId,
+      previousRole: previousRole ?? '',
+      newRole: nextRole,
+    })
+
     refresh()
   }
 
