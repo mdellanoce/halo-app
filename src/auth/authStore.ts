@@ -82,6 +82,34 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       currentWorkspace: workspace,
       isAuthenticated: true,
     })
+
+    pendo.identify({
+      visitor: {
+        id: visitor.id,
+        email: visitor.email,
+        full_name: `${visitor.firstName} ${visitor.lastName}`,
+        firstName: visitor.firstName,
+        lastName: visitor.lastName,
+        username: visitor.username,
+        jobTitle: visitor.jobTitle,
+        role: visitor.role,
+        yearsExperience: visitor.yearsExperience,
+        location: visitor.location,
+        primaryUseCase: visitor.primaryUseCase,
+        teamSize: visitor.teamSize,
+        topGoals: visitor.topGoals,
+        createdAt: visitor.createdAt,
+      },
+      account: {
+        id: workspace.id,
+        name: workspace.companyName,
+        companyName: workspace.companyName,
+        companySize: workspace.companySize,
+        industry: workspace.industry,
+        planTier: workspace.planTier,
+        createdAt: workspace.createdAt,
+      },
+    })
   },
 
   clearSession: () => {
@@ -126,6 +154,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signOut: async () => {
     get().clearSession()
     clearWizardDraft()
+    pendo.clearSession()
     return Promise.resolve()
   },
 }))
