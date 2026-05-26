@@ -1,24 +1,25 @@
 /**
- * PendoBridge — PHASE 1 STUB.
+ * PendoBridge — Pendo SDK lifecycle wiring.
  *
- * This component is a no-op pass-through reserved for FND-07's provider-stack
- * ordering. The real Pendo wiring is implemented in Phase 6 ("Pendo Install &
- * Wiring"). Do NOT add `window.pendo` references, `import.meta.env.VITE_PENDO_API_KEY`
- * lookups, or anonymous ID generation in this file before Phase 6.
+ * Calls `pendo.initialize` exactly once when the component mounts (app boot).
+ * An empty visitor id lets the SDK resolve the previous visitor from
+ * cookies/localStorage if available, otherwise it falls back to a new
+ * anonymous visitor.
  *
- * Phase 6 replaces the BODY of this component with:
- *   - Pendo snippet loader (script injection)
- *   - `pendo.initialize` with anonymous visitor ID (from K.pendoAnonId() + nanoid)
- *   - `pendo.identify` wired to auth state changes via useAuth()
- *   - `pendo.clearSession` wired to sign-out
- *   - `pendo.location.setUrl` wired to React Router route changes
- *
- * The provider POSITION in src/App.tsx stays fixed — Phase 6 never needs to
- * edit App.tsx.
+ * `pendo.identify` (sign-in) and `pendo.clearSession` (sign-out) are wired
+ * in `src/auth/authStore.ts` where visitor + workspace data is available.
  */
 
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 
 export function PendoBridge({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    pendo.initialize({
+      visitor: {
+        id: '',
+      },
+    })
+  }, [])
+
   return <>{children}</>
 }
