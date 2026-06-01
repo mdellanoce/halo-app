@@ -1,24 +1,62 @@
 /**
- * PendoBridge — PHASE 1 STUB.
+ * PendoBridge — Phase 6: Pendo Install & Wiring.
  *
- * This component is a no-op pass-through reserved for FND-07's provider-stack
- * ordering. The real Pendo wiring is implemented in Phase 6 ("Pendo Install &
- * Wiring"). Do NOT add `window.pendo` references, `import.meta.env.VITE_PENDO_API_KEY`
- * lookups, or anonymous ID generation in this file before Phase 6.
+ * This component subscribes to the Zustand auth store and keeps
+ * Pendo in sync with the user's authentication state:
  *
- * Phase 6 replaces the BODY of this component with:
- *   - Pendo snippet loader (script injection)
- *   - `pendo.initialize` with anonymous visitor ID (from K.pendoAnonId() + nanoid)
- *   - `pendo.identify` wired to auth state changes via useAuth()
- *   - `pendo.clearSession` wired to sign-out
- *   - `pendo.location.setUrl` wired to React Router route changes
+ *   - When the user signs in (`isAuthenticated` becomes true):
+ *     calls `pendo.identify(...)` with the full visitor + account metadata.
+ *   - When the user signs out (`isAuthenticated` becomes false after being true):
+ *     calls `pendo.clearSession()` to reset to an anonymous visitor.
  *
- * The provider POSITION in src/App.tsx stays fixed — Phase 6 never needs to
- * edit App.tsx.
+ * `pendo.initialize(...)` is called ONCE in `src/main.tsx` at app boot —
+ * this component never calls initialize.
  */
 
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
+import { useAuthStore } from '../auth/authStore'
 
 export function PendoBridge({ children }: { children: ReactNode }) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const currentVisitor = useAuthStore((s) => s.currentVisitor)
+  const currentWorkspace = useAuthStore((s) => s.currentWorkspace)
+  const wasAuthenticated = useRef(false)
+
+  useEffect(() => {
+    if (isAuthenticated && currentVisitor && currentWorkspace) {
+      pendo.identify({
+        visitor: {
+          id: currentVisitor.id,
+          email: currentVisitor.email,
+          full_name: `${currentVisitor.firstName} ${currentVisitor.lastName}`,
+          firstName: currentVisitor.firstName,
+          lastName: currentVisitor.lastName,
+          username: currentVisitor.username,
+          jobTitle: currentVisitor.jobTitle,
+          role: currentVisitor.role,
+          yearsExperience: currentVisitor.yearsExperience,
+          location: currentVisitor.location,
+          primaryUseCase: currentVisitor.primaryUseCase,
+          teamSize: currentVisitor.teamSize,
+          topGoals: currentVisitor.topGoals,
+          createdAt: currentVisitor.createdAt,
+        },
+        account: {
+          id: currentWorkspace.id,
+          name: currentWorkspace.companyName,
+          companyName: currentWorkspace.companyName,
+          companySize: currentWorkspace.companySize,
+          industry: currentWorkspace.industry,
+          planTier: currentWorkspace.planTier,
+          createdAt: currentWorkspace.createdAt,
+        },
+      })
+      wasAuthenticated.current = true
+    } else if (!isAuthenticated && wasAuthenticated.current) {
+      pendo.clearSession()
+      wasAuthenticated.current = false
+    }
+  }, [isAuthenticated, currentVisitor, currentWorkspace])
+
   return <>{children}</>
 }
