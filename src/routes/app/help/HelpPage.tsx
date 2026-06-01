@@ -18,7 +18,7 @@
  * The flat sibling shape is explicitly accepted per UI-SPEC line 840.
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Stack, Title } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { listHelpArticles } from '../../../help/helpArticles'
@@ -43,6 +43,19 @@ export function HelpPage(): React.JSX.Element {
       return haystack.includes(needle)
     })
   }, [allArticles, debouncedQuery])
+
+  // Track help searches on debounced query changes (not every keystroke).
+  useEffect(() => {
+    if (debouncedQuery.trim() === '') return
+    if (typeof pendo !== 'undefined') {
+      pendo.track('help_search_executed', {
+        query: debouncedQuery.trim(),
+        resultsCount: filtered.length,
+        totalArticles: allArticles.length,
+        hasResults: filtered.length > 0,
+      });
+    }
+  }, [debouncedQuery, filtered.length, allArticles.length])
 
   return (
     <Stack gap="lg">

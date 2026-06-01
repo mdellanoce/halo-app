@@ -144,11 +144,16 @@ export function ListsPage(): React.JSX.Element {
               onEdit={(task) => setEditTask(task)}
               onDelete={(task) => setDeleteTarget(task)}
               onToggleComplete={(task, nextDone) => {
-                updateTask(workspaceId, task.id, {
-                  // Off-toggle: restore prior non-done status if recorded;
-                  // fall back to 'todo' for legacy tasks without prevStatus.
-                  status: nextDone ? 'done' : (task.prevStatus ?? 'todo'),
-                })
+                const newStatus = nextDone ? 'done' : (task.prevStatus ?? 'todo')
+                updateTask(workspaceId, task.id, { status: newStatus })
+                if (typeof pendo !== 'undefined') {
+                  pendo.track('task_status_toggled', {
+                    taskId: task.id,
+                    previousStatus: task.status,
+                    newStatus,
+                    isCompleting: nextDone,
+                  });
+                }
                 refresh()
               }}
             />
@@ -195,6 +200,13 @@ export function ListsPage(): React.JSX.Element {
               icon: <IconTrash size={18} />,
               autoClose: 3000,
             })
+            if (typeof pendo !== 'undefined') {
+              pendo.track('task_deleted', {
+                taskId: deleteTarget.id,
+                taskStatus: deleteTarget.status,
+                taskPriority: deleteTarget.priority,
+              });
+            }
             refresh()
           }
         }}

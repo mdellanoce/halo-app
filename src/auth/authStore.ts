@@ -124,6 +124,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
+    // Track sign-out before clearing session so pendo agent still has visitor context.
+    if (typeof pendo !== 'undefined') {
+      const state = get()
+      pendo.track('sign_out_completed', {
+        sessionDuration: (() => {
+          const session = readWithSchema<Session | null>(K.session(), SessionSchema, null)
+          if (session?.signedInAt) {
+            return Math.round((Date.now() - new Date(session.signedInAt).getTime()) / 1000)
+          }
+          return null
+        })(),
+      });
+    }
     get().clearSession()
     clearWizardDraft()
     return Promise.resolve()

@@ -104,8 +104,21 @@ export function WorkspaceTab(): React.JSX.Element | null {
         autoClose: 3000,
       })
       form.reset(values)
-      // SET-05 deferred to Phase 6 — pendo.identify (or pendo.updateOptions
-      // for account metadata) slots in here once PendoBridge is real.
+      if (typeof pendo !== 'undefined') {
+        const changed: string[] = []
+        if (values.companyName !== workspace.companyName) changed.push('companyName')
+        if (values.companySize !== workspace.companySize) changed.push('companySize')
+        if (values.industry !== workspace.industry) changed.push('industry')
+        if (values.planTier !== workspace.planTier) changed.push('planTier')
+        pendo.track('workspace_updated', {
+          companyName: values.companyName,
+          companySize: values.companySize,
+          industry: values.industry,
+          planTier: values.planTier,
+          previousPlanTier: workspace.planTier,
+          fieldsChanged: changed.join(','),
+        });
+      }
     } else {
       notifications.show({
         title: 'Something went wrong',

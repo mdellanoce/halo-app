@@ -81,6 +81,12 @@ export type ResetDemoDataModalProps = {
 
 export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps): React.JSX.Element {
   const handleReset = () => {
+    // Track demo data reset before wiping localStorage so pendo agent
+    // still has visitor context.
+    if (typeof pendo !== 'undefined') {
+      pendo.track('demo_data_reset', {});
+    }
+
     // 1. Bulk-wipe halo:v* prefix keys from localStorage.
     //
     // Deliberate exception to FND-04 codec rule (S6): bulk wipe by prefix needs
