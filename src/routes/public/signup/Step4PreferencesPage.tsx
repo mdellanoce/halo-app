@@ -177,6 +177,32 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // (T-02-17) ends here. sessionStorage[halo:v1:signup:draft] is removed.
       clearWizardDraft()
 
+      // Track signup completion — the most important onboarding conversion event.
+      window.pendo?.track('signup_completed', {
+        email: s1.email,
+        username: s1.username,
+        firstName: s1.firstName,
+        lastName: s1.lastName,
+        jobTitle: s2.jobTitle,
+        role: s2.role,
+        yearsExperience: s2.yearsExperience,
+        location: s2.location,
+        primaryUseCase: step4Values.primaryUseCase,
+        teamSize: step4Values.teamSize,
+        topGoals: step4Values.topGoals,
+        companyName: s3.companyName,
+        companySize: s3.companySize,
+        industry: s3.industry,
+        planTier: s3.planTier,
+      })
+
+      // Track step 4 completion as part of the signup funnel.
+      window.pendo?.track('signup_step_completed', {
+        stepNumber: 4,
+        stepName: 'preferences',
+        fieldsCompleted: ['primaryUseCase', 'teamSize', 'topGoals'],
+      })
+
       // Redirect into the authenticated area. replace:true so the back button
       // from /app does not return to /signup/preferences.
       navigate('/app', { replace: true })

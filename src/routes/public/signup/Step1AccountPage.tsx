@@ -88,6 +88,14 @@ export function Step1AccountPage(): React.JSX.Element {
     const { password, ...nonSecretValues } = values
     setWizardPassword(password)
     writeWizardDraftStep('step1', nonSecretValues)
+
+    // Track step 1 completion in the signup funnel.
+    window.pendo?.track('signup_step_completed', {
+      stepNumber: 1,
+      stepName: 'account',
+      fieldsCompleted: ['email', 'password', 'firstName', 'lastName', 'username'],
+    })
+
     navigate('/signup/details')
   })
 

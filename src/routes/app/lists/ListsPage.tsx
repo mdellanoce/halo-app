@@ -133,6 +133,17 @@ export function ListsPage(): React.JSX.Element {
               if (next.status !== undefined) setStatusFilter(next.status)
               if (next.priority !== undefined) setPriorityFilter(next.priority)
               if (next.assignee !== undefined) setAssigneeFilter(next.assignee)
+
+              // Track filter changes to understand which dimensions users segment by.
+              const filterType = next.status !== undefined ? 'status' : next.priority !== undefined ? 'priority' : 'assignee'
+              const filterValue = next.status ?? next.priority ?? next.assignee ?? 'all'
+              window.pendo?.track('task_filters_applied', {
+                filterType,
+                filterValue,
+                statusFilter: next.status !== undefined ? next.status : statusFilter,
+                priorityFilter: next.priority !== undefined ? next.priority : priorityFilter,
+                assigneeFilter: next.assignee !== undefined ? next.assignee : assigneeFilter,
+              })
             }}
           />
           {filteredTasks.length === 0 && filtersActive ? (
@@ -144,11 +155,17 @@ export function ListsPage(): React.JSX.Element {
               onEdit={(task) => setEditTask(task)}
               onDelete={(task) => setDeleteTarget(task)}
               onToggleComplete={(task, nextDone) => {
-                updateTask(workspaceId, task.id, {
-                  // Off-toggle: restore prior non-done status if recorded;
-                  // fall back to 'todo' for legacy tasks without prevStatus.
-                  status: nextDone ? 'done' : (task.prevStatus ?? 'todo'),
+                const newStatus = nextDone ? 'done' : (task.prevStatus ?? 'todo')
+                updateTask(workspaceId, task.id, { status: newStatus })
+
+                // Track task completion toggle — key feature usage metric.
+                window.pendo?.track('task_status_toggled', {
+                  taskId: task.id,
+                  previousStatus: task.status,
+                  newStatus,
+                  markedDone: nextDone,
                 })
+
                 refresh()
               }}
             />
@@ -195,6 +212,15 @@ export function ListsPage(): React.JSX.Element {
               icon: <IconTrash size={18} />,
               autoClose: 3000,
             })
+
+            // Track task deletion.
+            window.pendo?.track('task_deleted', {
+              taskId: deleteTarget.id,
+              taskTitle: deleteTarget.title,
+              taskStatus: deleteTarget.status,
+              taskPriority: deleteTarget.priority,
+            })
+
             refresh()
           }
         }}

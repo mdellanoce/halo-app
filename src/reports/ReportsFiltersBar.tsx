@@ -75,6 +75,15 @@ export function ReportsFiltersBar({
       value[1] ? new Date(value[1]) : null,
     ]
     onDateRangeChange(next)
+
+    // Track report filter change for analytics on which dimensions are most used.
+    window.pendo?.track('report_filters_applied', {
+      filterType: 'dateRange',
+      dateRangeStart: value[0] ?? '',
+      dateRangeEnd: value[1] ?? '',
+      assigneeFilter: assignee,
+      statusFilter: statusFilter.join(','),
+    })
   }
 
   return (
@@ -91,7 +100,18 @@ export function ReportsFiltersBar({
       <Select
         label="Assignee"
         value={assignee}
-        onChange={(v) => onAssigneeChange(v ?? 'all')}
+        onChange={(v) => {
+          const next = v ?? 'all'
+          onAssigneeChange(next)
+
+          window.pendo?.track('report_filters_applied', {
+            filterType: 'assignee',
+            assigneeFilter: next,
+            dateRangeStart: dateRangeValue[0] ?? '',
+            dateRangeEnd: dateRangeValue[1] ?? '',
+            statusFilter: statusFilter.join(','),
+          })
+        }}
         data={assigneeOptions}
         clearable={false}
         w={200}
@@ -100,7 +120,18 @@ export function ReportsFiltersBar({
       <MultiSelect
         label="Status"
         value={statusFilter}
-        onChange={(v) => onStatusChange(v as TaskStatus[])}
+        onChange={(v) => {
+          const next = v as TaskStatus[]
+          onStatusChange(next)
+
+          window.pendo?.track('report_filters_applied', {
+            filterType: 'status',
+            statusFilter: next.join(','),
+            assigneeFilter: assignee,
+            dateRangeStart: dateRangeValue[0] ?? '',
+            dateRangeEnd: dateRangeValue[1] ?? '',
+          })
+        }}
         data={STATUS_OPTIONS}
         w={240}
         pendoId={PENDO_IDS.reports.filter.status}

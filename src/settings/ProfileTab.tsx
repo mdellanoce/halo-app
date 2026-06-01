@@ -107,9 +107,16 @@ export function ProfileTab(): React.JSX.Element | null {
       // Re-base form's defaultValues so isDirty flips back to false until
       // the next edit. Without this, Save would stay enabled after a save.
       form.reset(values)
-      // SET-05 (pendo.identify on save) deferred to Phase 6 per CONTEXT.md —
-      // Phase 6 drops the pendo.identify call into this success branch
-      // alongside notifications.show.
+
+      // Track profile save event.
+      window.pendo?.track('profile_saved', {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        username: values.username,
+        jobTitle: values.jobTitle,
+        role: values.role,
+        location: values.location,
+      })
     } else {
       notifications.show({
         title: 'Something went wrong',

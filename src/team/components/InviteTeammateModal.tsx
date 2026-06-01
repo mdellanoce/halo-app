@@ -118,6 +118,13 @@ export function InviteTeammateModal({
       autoClose: 3000,
     })
 
+    // Track teammate invitation for collaboration analytics.
+    window.pendo?.track('teammate_invited', {
+      inviteeEmail: values.email.toLowerCase(),
+      workspaceRole: values.workspaceRole,
+      invitedAt: new Date().toISOString(),
+    })
+
     onSuccess()
     onClose()
   })

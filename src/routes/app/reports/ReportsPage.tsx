@@ -118,7 +118,17 @@ export function ReportsPage(): React.JSX.Element {
           variant="outline"
           leftSection={<IconDownload size={16} />}
           pendoId={PENDO_IDS.reports.csvExport}
-          onClick={() => exportTasksToCsv(filteredTasks)}
+          onClick={() => {
+            // Track CSV export before triggering download.
+            window.pendo?.track('report_csv_exported', {
+              taskCount: filteredTasks.length,
+              dateRangeStart: dateRange[0]?.toISOString() ?? '',
+              dateRangeEnd: dateRange[1]?.toISOString() ?? '',
+              assigneeFilter: assignee,
+              statusFilter: statusFilter.join(','),
+            })
+            exportTasksToCsv(filteredTasks)
+          }}
           disabled={filteredTasks.length === 0}
         >
           Export CSV
