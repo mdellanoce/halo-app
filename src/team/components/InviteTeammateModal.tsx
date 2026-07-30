@@ -56,16 +56,40 @@ export function InviteTeammateModal({
     () =>
       z
         .object({
-          email: z.string().min(1, 'Enter an email.').email('Enter a valid email.'),
+          email: z
+            .string()
+            .min(1, 'Enter an email.')
+            .superRefine((val, ctx) => {
+              const emails = val
+                .split(',')
+                .map((e) => e.trim())
+                .filter(Boolean)
+              if (emails.length === 0) {
+                ctx.addIssue({ code: 'custom', message: 'Enter at least one email.' })
+                return
+              }
+              for (const email of emails) {
+                const result = z.string().email().safeParse(email)
+                if (!result.success) {
+                  ctx.addIssue({ code: 'custom', message: `"${email}" is not a valid email.` })
+                }
+              }
+            }),
           workspaceRole: z.enum(['Admin', 'Member', 'Viewer'], { message: 'Pick a role.' }),
         })
         .superRefine((data, ctx) => {
-          if (findTeammateByEmail(workspaceId, data.email)) {
-            ctx.addIssue({
-              code: 'custom',
-              path: ['email'],
-              message: `${data.email} is already a teammate.`,
-            })
+          const emails = data.email
+            .split(',')
+            .map((e) => e.trim())
+            .filter(Boolean)
+          for (const email of emails) {
+            if (findTeammateByEmail(workspaceId, email)) {
+              ctx.addIssue({
+                code: 'custom',
+                path: ['email'],
+                message: `${email} is already a teammate.`,
+              })
+            }
           }
         }),
     [workspaceId],
@@ -92,27 +116,34 @@ export function InviteTeammateModal({
   }, [opened, form, defaultValues])
 
   const onSubmit = form.handleSubmit((values) => {
-    // D-03: derive firstName from email local-part (split on . or _, Title-Case each segment).
-    const localPart = values.email.split('@')[0]
-    const firstName = localPart
-      .split(/[._]/)
-      .map((seg) => seg.charAt(0).toUpperCase() + seg.slice(1).toLowerCase())
-      .join(' ')
+    const emails = values.email
+      .split(',')
+      .map((e) => e.trim())
+      .filter(Boolean)
 
-    createTeammate(workspaceId, {
-      firstName,
-      lastName: '',
-      email: values.email.toLowerCase(),
-      workspaceRole: values.workspaceRole,
-      status: 'invited',
-      lastActiveAt: null,
-      invitedAt: new Date().toISOString(),
-      avatar: null,
-    })
+    for (const email of emails) {
+      // D-03: derive firstName from email local-part (split on . or _, Title-Case each segment).
+      const localPart = email.split('@')[0]
+      const firstName = localPart
+        .split(/[._]/)
+        .map((seg) => seg.charAt(0).toUpperCase() + seg.slice(1).toLowerCase())
+        .join(' ')
+
+      createTeammate(workspaceId, {
+        firstName,
+        lastName: '',
+        email: email.toLowerCase(),
+        workspaceRole: values.workspaceRole,
+        status: 'invited',
+        lastActiveAt: null,
+        invitedAt: new Date().toISOString(),
+        avatar: null,
+      })
+    }
 
     notifications.show({
       title: 'Invite sent',
-      message: `Sent to ${values.email}`,
+      message: emails.length === 1 ? `Sent to ${emails[0]}` : `Sent to ${emails.length} teammates`,
       color: 'green',
       icon: <IconCheck size={18} />,
       autoClose: 3000,
@@ -137,8 +168,9 @@ export function InviteTeammateModal({
           <TextInput
             {...form.register('email')}
             label="Email"
-            type="email"
+            type="text"
             required
+            placeholder="e.g. alice@example.com, bob@example.com"
             error={form.formState.errors.email?.message}
             pendoId={PENDO_IDS.team.invite.modalEmail}
           />
@@ -161,19 +193,10 @@ export function InviteTeammateModal({
           />
         </Stack>
         <Group justify="flex-end" mt="lg" gap="md">
-          <Button
-            variant="default"
-            type="button"
-            pendoId={PENDO_IDS.team.invite.modalCancel}
-            onClick={onClose}
-          >
+          <Button variant="default" type="button" pendoId={PENDO_IDS.team.invite.modalCancel} onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            variant="filled"
-            type="submit"
-            pendoId={PENDO_IDS.team.invite.modalSubmit}
-          >
+          <Button variant="filled" type="submit" pendoId={PENDO_IDS.team.invite.modalSubmit}>
             Send invite
           </Button>
         </Group>
