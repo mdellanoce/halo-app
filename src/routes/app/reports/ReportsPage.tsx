@@ -37,42 +37,47 @@
  * Phase 3 D-01 placeholder convention forbids router edits at phase boundaries.
  */
 
-import React, { useState, useMemo } from 'react'
-import { Stack, Group, Title } from '@mantine/core'
-import { IconDownload } from '@tabler/icons-react'
-import dayjs from 'dayjs'
-import { Button } from '../../../ui/primitives'
-import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
-import { useAuthStore } from '../../../auth/authStore'
-import { listTasks } from '../../../tasks/tasksRepo'
-import { computeNowRef } from '../../../tasks/now-ref'
-import type { TaskStatus } from '../../../tasks/types'
-import { ReportsFiltersBar } from '../../../reports/ReportsFiltersBar'
-import { ReportsChart } from '../../../reports/ReportsChart'
-import { ReportsTable } from '../../../reports/ReportsTable'
-import { exportTasksToCsv } from '../../../reports/csvExport'
+import React, { useState, useMemo } from "react";
+import { Stack, Group, Title } from "@mantine/core";
+import { IconDownload } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import { Button } from "../../../ui/primitives";
+import { PENDO_IDS } from "../../../pendo/PENDO_IDS";
+import { useAuthStore } from "../../../auth/authStore";
+import { listTasks } from "../../../tasks/tasksRepo";
+import { computeNowRef } from "../../../tasks/now-ref";
+import type { TaskStatus } from "../../../tasks/types";
+import { ReportsFiltersBar } from "../../../reports/ReportsFiltersBar";
+import { ReportsChart } from "../../../reports/ReportsChart";
+import { ReportsTable } from "../../../reports/ReportsTable";
+import { exportTasksToCsv } from "../../../reports/csvExport";
 
-const DEFAULT_STATUS_FILTER: TaskStatus[] = ['todo', 'in_progress', 'done']
+const DEFAULT_STATUS_FILTER: TaskStatus[] = ["todo", "in_progress", "done"];
 
 export function ReportsPage(): React.JSX.Element {
-  const visitor = useAuthStore((s) => s.currentVisitor)
-  const workspaceId = useAuthStore((s) => s.currentWorkspace?.id)
+  const visitor = useAuthStore((s) => s.currentVisitor);
+  const workspaceId = useAuthStore((s) => s.currentWorkspace?.id);
 
   // Single read of the workspace's task list. Reports is read-only, so the
   // memoization key is just workspaceId — there is no CRUD refresh ticker
   // (compare ListsPage which carries one for create/edit/delete cycles).
-  const allTasks = useMemo(() => (workspaceId ? listTasks(workspaceId) : []), [workspaceId])
+  const allTasks = useMemo(
+    () => (workspaceId ? listTasks(workspaceId) : []),
+    [workspaceId],
+  );
 
   // Anchor "now" to the most recent task activity (shared with Dashboard via D-22).
-  const nowRef = useMemo(() => computeNowRef(allTasks), [allTasks])
+  const nowRef = useMemo(() => computeNowRef(allTasks), [allTasks]);
 
   // Default date range: [nowRef - 30 days, nowRef].
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>(() => [
-    dayjs(nowRef).subtract(30, 'day').toDate(),
+    dayjs(nowRef).subtract(30, "day").toDate(),
     dayjs(nowRef).toDate(),
-  ])
-  const [assignee, setAssignee] = useState<string>('all')
-  const [statusFilter, setStatusFilter] = useState<TaskStatus[]>(DEFAULT_STATUS_FILTER)
+  ]);
+  const [assignee, setAssignee] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<TaskStatus[]>(
+    DEFAULT_STATUS_FILTER,
+  );
 
   // Filtered + sorted task slice. createdAt-anchored date filter; assignee
   // equality on .id; status multi-select includes().
@@ -85,29 +90,34 @@ export function ReportsPage(): React.JSX.Element {
         // on "what day is this task in." See 04-REVIEW.md CR-02.
         if (
           dateRange[0] &&
-          dayjs.utc(t.createdAt).isBefore(dayjs.utc(dateRange[0]).startOf('day'))
+          dayjs
+            .utc(t.createdAt)
+            .isBefore(dayjs.utc(dateRange[0]).startOf("day"))
         ) {
-          return false
+          return false;
         }
         if (
           dateRange[1] &&
-          dayjs.utc(t.createdAt).isAfter(dayjs.utc(dateRange[1]).endOf('day'))
+          dayjs.utc(t.createdAt).isAfter(dayjs.utc(dateRange[1]).endOf("day"))
         ) {
-          return false
+          return false;
         }
-        if (assignee !== 'all' && t.assignee?.id !== assignee) return false
+        if (assignee !== "all" && t.assignee?.id !== assignee) return false;
         // Empty status selection = match-all (matches Lists' `All` Select idiom).
         // Pre-04-06: empty array meant "filter out everything," which stranded
         // users who deselected every Status chip with no recovery affordance.
         // See 04-REVIEW.md CR-03 + 04-06-PLAN.md Task D for the override rationale.
-        if (statusFilter.length > 0 && !statusFilter.includes(t.status)) return false
-        return true
+        if (statusFilter.length > 0 && !statusFilter.includes(t.status))
+          return false;
+        return true;
       })
-      .sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf())
-  }, [allTasks, dateRange, assignee, statusFilter])
+      .sort(
+        (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf(),
+      );
+  }, [allTasks, dateRange, assignee, statusFilter]);
 
   // Defensive narrowing — RequireAuth already gates this path.
-  if (!workspaceId || !visitor) return <></>
+  if (!workspaceId || !visitor) return <></>;
 
   return (
     <Stack gap="lg">
@@ -115,7 +125,7 @@ export function ReportsPage(): React.JSX.Element {
       <Group justify="space-between" align="center">
         <Title order={3}>Reports</Title>
         <Button
-          variant="outline"
+          variant="filled"
           leftSection={<IconDownload size={16} />}
           pendoId={PENDO_IDS.reports.csvExport}
           onClick={() => exportTasksToCsv(filteredTasks)}
@@ -140,5 +150,5 @@ export function ReportsPage(): React.JSX.Element {
 
       <ReportsTable tasks={filteredTasks} />
     </Stack>
-  )
+  );
 }
