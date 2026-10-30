@@ -44,6 +44,7 @@ import {
 } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
 import {
   Paper,
   Table,
@@ -56,8 +57,6 @@ import {
 import { IconChevronUp, IconChevronDown } from '@tabler/icons-react'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
 import {
-  TASK_STATUS_LABELS,
-  TASK_PRIORITY_LABELS,
   TASK_STATUS_BADGE_COLOR,
   TASK_PRIORITY_BADGE_COLOR,
 } from '../tasks/labels'
@@ -72,6 +71,7 @@ export type ReportsTableProps = {
 const helper = createColumnHelper<Task>()
 
 export function ReportsTable({ tasks }: ReportsTableProps): React.JSX.Element {
+  const { t } = useTranslation()
   // Default order: createdAt desc. TanStack sees an empty sorting array; this
   // presorted slice IS the default. When a header is clicked, TanStack's sorted
   // row model takes over (three-state asc → desc → clear → default).
@@ -88,38 +88,38 @@ export function ReportsTable({ tasks }: ReportsTableProps): React.JSX.Element {
   const columns = useMemo(
     () => [
       helper.accessor('title', {
-        header: 'Title',
+        header: () => t('reports.table.title'),
         cell: (info) => <Text size="sm">{info.getValue()}</Text>,
       }),
       helper.accessor('status', {
-        header: 'Status',
+        header: () => t('reports.table.status'),
         cell: (info) => {
           const status = info.getValue()
           return (
             <Badge color={TASK_STATUS_BADGE_COLOR[status]} variant="light" size="sm">
-              {TASK_STATUS_LABELS[status]}
+              {t(`tasks.status.${status}`)}
             </Badge>
           )
         },
       }),
       helper.accessor('priority', {
-        header: 'Priority',
+        header: () => t('reports.table.priority'),
         cell: (info) => {
           const priority = info.getValue()
           return (
             <Badge color={TASK_PRIORITY_BADGE_COLOR[priority]} variant="light" size="sm">
-              {TASK_PRIORITY_LABELS[priority]}
+              {t(`tasks.priority.${priority}`)}
             </Badge>
           )
         },
       }),
       helper.accessor((row) => row.assignee?.name ?? '—', {
         id: 'assignee',
-        header: 'Assignee',
+        header: () => t('reports.table.assignee'),
         cell: (info) => <Text size="sm">{info.getValue()}</Text>,
       }),
       helper.accessor('dueDate', {
-        header: 'Due date',
+        header: () => t('reports.table.dueDate'),
         cell: (info) => {
           const value = info.getValue()
           return (
@@ -130,7 +130,7 @@ export function ReportsTable({ tasks }: ReportsTableProps): React.JSX.Element {
         },
       }),
       helper.accessor('completedAt', {
-        header: 'Completed at',
+        header: () => t('reports.table.completedAt'),
         cell: (info) => {
           const value = info.getValue()
           return (
@@ -141,7 +141,7 @@ export function ReportsTable({ tasks }: ReportsTableProps): React.JSX.Element {
         },
       }),
     ],
-    [],
+    [t],
   )
 
   const table = useReactTable({
@@ -209,7 +209,7 @@ export function ReportsTable({ tasks }: ReportsTableProps): React.JSX.Element {
             <Table.Tr>
               <Table.Td colSpan={columns.length}>
                 <Center py="xl">
-                  <Text c="dimmed">No tasks match these filters.</Text>
+                  <Text c="dimmed">{t('reports.table.empty')}</Text>
                 </Center>
               </Table.Td>
             </Table.Tr>

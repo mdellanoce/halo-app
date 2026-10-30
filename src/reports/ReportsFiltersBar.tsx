@@ -22,9 +22,9 @@
  */
 
 import { Group } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 import { Select, MultiSelect, DatePickerInput } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
-import { TASK_STATUS_LABELS } from '../tasks/labels'
 import { getAssigneeOptions } from '../tasks/assigneeOptions'
 import type { TaskStatus } from '../tasks/types'
 import type { Visitor } from '../auth/types'
@@ -40,11 +40,7 @@ export type ReportsFiltersBarProps = {
   onStatusChange: (next: TaskStatus[]) => void
 }
 
-const STATUS_OPTIONS: Array<{ value: TaskStatus; label: string }> = [
-  { value: 'todo', label: TASK_STATUS_LABELS.todo },
-  { value: 'in_progress', label: TASK_STATUS_LABELS.in_progress },
-  { value: 'done', label: TASK_STATUS_LABELS.done },
-]
+const STATUS_VALUES: TaskStatus[] = ['todo', 'in_progress', 'done']
 
 export function ReportsFiltersBar({
   workspaceId,
@@ -56,8 +52,13 @@ export function ReportsFiltersBar({
   onAssigneeChange,
   onStatusChange,
 }: ReportsFiltersBarProps): React.JSX.Element {
+  const { t } = useTranslation()
+  const statusOptions = STATUS_VALUES.map((value) => ({
+    value,
+    label: t(`tasks.status.${value}`),
+  }))
   const assigneeOptions = [
-    { value: 'all', label: 'All' },
+    { value: 'all', label: t('reports.filters.all') },
     ...getAssigneeOptions(workspaceId, visitor),
   ]
 
@@ -81,7 +82,7 @@ export function ReportsFiltersBar({
     <Group gap="md" align="flex-end">
       <DatePickerInput
         type="range"
-        label="Date range"
+        label={t('reports.filters.dateRange')}
         value={dateRangeValue}
         onChange={handleDateRangeChange}
         valueFormat="MMM D, YYYY"
@@ -89,7 +90,7 @@ export function ReportsFiltersBar({
         pendoId={PENDO_IDS.reports.filter.dateRange}
       />
       <Select
-        label="Assignee"
+        label={t('reports.filters.assignee')}
         value={assignee}
         onChange={(v) => onAssigneeChange(v ?? 'all')}
         data={assigneeOptions}
@@ -98,10 +99,10 @@ export function ReportsFiltersBar({
         pendoId={PENDO_IDS.reports.filter.assignee}
       />
       <MultiSelect
-        label="Status"
+        label={t('reports.filters.status')}
         value={statusFilter}
         onChange={(v) => onStatusChange(v as TaskStatus[])}
-        data={STATUS_OPTIONS}
+        data={statusOptions}
         w={240}
         pendoId={PENDO_IDS.reports.filter.status}
       />

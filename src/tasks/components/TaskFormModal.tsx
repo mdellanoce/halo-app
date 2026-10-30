@@ -39,6 +39,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal, Stack, Group } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
+import { useTranslation } from 'react-i18next'
 import { IconCheck } from '@tabler/icons-react'
 import {
   TextInput,
@@ -53,10 +54,7 @@ import {
   TaskStatusEnum,
   TaskPriorityEnum,
 } from '../schemas'
-import {
-  TASK_STATUS_LABELS,
-  TASK_PRIORITY_LABELS,
-} from '../labels'
+import { taskStatusLabel, taskPriorityLabel } from '../labels'
 import type { Task, TaskFormValues, Assignee } from '../types'
 import { createTask, updateTask } from '../tasksRepo'
 import { getAssigneeOptions } from '../assigneeOptions'
@@ -80,15 +78,6 @@ export type TaskFormModalProps = {
   initialTask?: Task
 }
 
-const STATUS_OPTIONS = TaskStatusEnum.options.map((s) => ({
-  value: s,
-  label: TASK_STATUS_LABELS[s],
-}))
-const PRIORITY_OPTIONS = TaskPriorityEnum.options.map((p) => ({
-  value: p,
-  label: TASK_PRIORITY_LABELS[p],
-}))
-
 export function TaskFormModal({
   opened,
   onClose,
@@ -99,6 +88,18 @@ export function TaskFormModal({
   mode,
   initialTask,
 }: TaskFormModalProps): React.JSX.Element {
+  const { t } = useTranslation()
+  // Option labels resolve per render so they follow the active locale; the
+  // option `value`s stay the stored enum values.
+  const statusOptions = TaskStatusEnum.options.map((s) => ({
+    value: s,
+    label: taskStatusLabel(t, s),
+  }))
+  const priorityOptions = TaskPriorityEnum.options.map((p) => ({
+    value: p,
+    label: taskPriorityLabel(t, p),
+  }))
+
   const defaultAssignee: Assignee = {
     id: visitor.id,
     name: `${visitor.firstName} ${visitor.lastName}`,
@@ -189,7 +190,7 @@ export function TaskFormModal({
     if (mode === 'create') {
       createTask(workspaceId, { ...values, completedAt: null })
       notifications.show({
-        title: 'Task created',
+        title: t('tasks.notifications.created'),
         message: '',
         color: 'green',
         icon: <IconCheck size={18} />,
@@ -198,7 +199,7 @@ export function TaskFormModal({
     } else if (initialTask) {
       updateTask(workspaceId, initialTask.id, values)
       notifications.show({
-        title: 'Changes saved',
+        title: t('tasks.notifications.saved'),
         message: '',
         color: 'green',
         icon: <IconCheck size={18} />,
@@ -270,7 +271,7 @@ export function TaskFormModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={mode === 'create' ? 'New task' : 'Edit task'}
+      title={mode === 'create' ? t('tasks.form.createTitle') : t('tasks.form.editTitle')}
       size="md"
       centered
       keepMounted={false}
@@ -280,22 +281,22 @@ export function TaskFormModal({
         <Stack gap="md">
           <TextInput
             {...form.register('title')}
-            label="Title"
+            label={t('tasks.fields.title')}
             required
             error={form.formState.errors.title?.message}
             pendoId={PENDO_IDS.lists.modal.title}
           />
           <Textarea
             {...form.register('description')}
-            label="Description"
+            label={t('tasks.fields.description')}
             rows={3}
             error={form.formState.errors.description?.message}
             pendoId={PENDO_IDS.lists.modal.description}
           />
           <Group gap="md" grow>
             <Select
-              label="Status"
-              data={STATUS_OPTIONS}
+              label={t('tasks.fields.status')}
+              data={statusOptions}
               value={form.watch('status') ?? null}
               onChange={handleStatusChange}
               clearable={false}
@@ -303,8 +304,8 @@ export function TaskFormModal({
               pendoId={PENDO_IDS.lists.modal.status}
             />
             <Select
-              label="Priority"
-              data={PRIORITY_OPTIONS}
+              label={t('tasks.fields.priority')}
+              data={priorityOptions}
               value={form.watch('priority') ?? null}
               onChange={handlePriorityChange}
               clearable={false}
@@ -314,7 +315,7 @@ export function TaskFormModal({
           </Group>
           <Group gap="md" grow>
             <Select
-              label="Assignee"
+              label={t('tasks.fields.assignee')}
               data={assigneeOptions}
               value={form.watch('assignee')?.id ?? null}
               onChange={handleAssigneeChange}
@@ -323,7 +324,7 @@ export function TaskFormModal({
               pendoId={PENDO_IDS.lists.modal.assignee}
             />
             <DatePickerInput
-              label="Due date"
+              label={t('tasks.fields.dueDate')}
               clearable
               value={dueDateValue}
               onChange={handleDueDateChange}
@@ -346,7 +347,7 @@ export function TaskFormModal({
                 onRequestDelete?.(initialTask)
               }}
             >
-              Delete task
+              {t('tasks.form.delete')}
             </Button>
           ) : (
             <span />
@@ -358,7 +359,7 @@ export function TaskFormModal({
               pendoId={PENDO_IDS.lists.modal.cancel}
               onClick={onClose}
             >
-              Discard
+              {t('tasks.form.discard')}
             </Button>
             <Button
               variant="filled"
@@ -366,7 +367,7 @@ export function TaskFormModal({
               disabled={mode === 'edit' && !form.formState.isDirty}
               pendoId={PENDO_IDS.lists.modal.save}
             >
-              {mode === 'create' ? 'Create task' : 'Save changes'}
+              {mode === 'create' ? t('tasks.form.submitCreate') : t('tasks.form.submitSave')}
             </Button>
           </Group>
         </Group>

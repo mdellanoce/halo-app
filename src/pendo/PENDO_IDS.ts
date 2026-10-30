@@ -30,6 +30,7 @@ export const PENDO_IDS = {
   layout: {
     publicDemoBanner: 'layout.public.demo-banner',
     publicLanding: 'layout.public.landing',
+    publicLanguageSwitcher: 'layout.public.language-switcher',
   },
 
   /**
@@ -121,6 +122,7 @@ export const PENDO_IDS = {
   topbar: {
     logo:          'topbar.logo',
     workspaceName: 'topbar.workspace-name',
+    languageSwitcher: 'topbar.language-switcher',
     userMenu: {
       button:   'topbar.user-menu.button',
       profile:  'topbar.user-menu.profile',
@@ -226,6 +228,7 @@ export const PENDO_IDS = {
     },
     preferences: {
       themeToggle: 'settings.preferences.theme-toggle',
+      languageSelect: 'settings.preferences.language-select',
     },
     dangerZone: {
       button:        'settings.danger-zone.button',

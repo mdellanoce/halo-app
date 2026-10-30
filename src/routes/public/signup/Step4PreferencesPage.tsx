@@ -25,6 +25,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Navigate, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Stack, Group, Title, Alert } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import { Select, NumberInput, MultiSelect, Button } from '../../../ui/primitives'
@@ -64,7 +65,27 @@ const GOAL_OPTIONS = [
   'Replace another tool',
 ] as const
 
+// Catalog keys for the option labels. Option VALUES stay the English enum
+// strings above (schema + stored visitor record expect them).
+const USE_CASE_LABEL_KEYS: Record<(typeof USE_CASE_OPTIONS)[number], string> = {
+  'Project management': 'signup.step4.useCases.projectManagement',
+  'Task tracking': 'signup.step4.useCases.taskTracking',
+  'Team coordination': 'signup.step4.useCases.teamCoordination',
+  'Personal productivity': 'signup.step4.useCases.personalProductivity',
+  'Just exploring': 'signup.step4.useCases.justExploring',
+}
+
+const GOAL_LABEL_KEYS: Record<(typeof GOAL_OPTIONS)[number], string> = {
+  'Ship faster': 'signup.step4.goals.shipFaster',
+  'Better visibility': 'signup.step4.goals.betterVisibility',
+  'Less context switching': 'signup.step4.goals.lessContextSwitching',
+  'Cleaner reporting': 'signup.step4.goals.cleanerReporting',
+  'Onboard the team': 'signup.step4.goals.onboardTeam',
+  'Replace another tool': 'signup.step4.goals.replaceTool',
+}
+
 export function Step4PreferencesPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const draft = readWizardDraft()
 
@@ -200,28 +221,28 @@ export function Step4PreferencesPage(): React.JSX.Element {
 
   return (
     <Stack gap="md">
-      <Title order={2}>Set up your workspace</Title>
+      <Title order={2}>{t('signup.step4.title')}</Title>
       {submitError === 'generic_failure' && (
         <Alert icon={<IconAlertCircle size={18} />} color="red" variant="light">
-          Something went wrong — please try again.
+          {t('signup.errors.generic')}
         </Alert>
       )}
       {submitError === 'duplicate_email' && (
         <Alert icon={<IconAlertCircle size={18} />} color="red" variant="light">
-          An account with this email already exists.
+          {t('signup.errors.emailDuplicate')}
         </Alert>
       )}
       {submitError === 'duplicate_username' && (
         <Alert icon={<IconAlertCircle size={18} />} color="red" variant="light">
-          That username is taken — try another.
+          {t('signup.errors.usernameTaken')}
         </Alert>
       )}
       <form onSubmit={onSubmit} noValidate>
         <Stack gap="md">
           <Select
-            label="What will you use Halo for?"
-            placeholder="Pick what fits best"
-            data={[...USE_CASE_OPTIONS]}
+            label={t('signup.step4.useCaseLabel')}
+            placeholder={t('signup.step4.useCasePlaceholder')}
+            data={USE_CASE_OPTIONS.map((value) => ({ value, label: t(USE_CASE_LABEL_KEYS[value]) }))}
             value={form.watch('primaryUseCase') ?? null}
             onChange={(value) => {
               // Mantine's Select hands back `string | null`. On clear (null)
@@ -249,7 +270,7 @@ export function Step4PreferencesPage(): React.JSX.Element {
             pendoId={PENDO_IDS.signup.step4.useCase}
           />
           <NumberInput
-            label="How many people on your team?"
+            label={t('signup.step4.teamSizeLabel')}
             placeholder="5"
             min={1}
             max={10000}
@@ -280,10 +301,10 @@ export function Step4PreferencesPage(): React.JSX.Element {
             pendoId={PENDO_IDS.signup.step4.teamSize}
           />
           <MultiSelect
-            label="What are you hoping to get out of Halo?"
-            placeholder="Pick up to three"
-            description="Select up to three."
-            data={[...GOAL_OPTIONS]}
+            label={t('signup.step4.goalsLabel')}
+            placeholder={t('signup.step4.goalsPlaceholder')}
+            description={t('signup.step4.goalsDescription')}
+            data={GOAL_OPTIONS.map((value) => ({ value, label: t(GOAL_LABEL_KEYS[value]) }))}
             value={form.watch('topGoals') ?? []}
             onChange={(values) => {
               // Mantine's MultiSelect hands back `string[]`. Filter to known
@@ -305,12 +326,12 @@ export function Step4PreferencesPage(): React.JSX.Element {
               variant="default"
               onClick={onBack}
               pendoId={PENDO_IDS.signup.step4.back}
-            >Back</Button>
+            >{t('common.back')}</Button>
             <Button
               type="submit"
               loading={form.formState.isSubmitting}
               pendoId={PENDO_IDS.signup.step4.submit}
-            >Create account</Button>
+            >{t('signup.step4.createAccount')}</Button>
           </Group>
         </Stack>
       </form>

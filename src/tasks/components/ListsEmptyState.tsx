@@ -14,6 +14,7 @@
 
 import { Center, Stack, Title, Text } from '@mantine/core'
 import { IconChecklist } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
@@ -26,6 +27,7 @@ export function ListsEmptyState({
   workspaceName,
   onCreateClick,
 }: ListsEmptyStateProps): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <Center mih={400} data-pendo-id={PENDO_IDS.lists.emptyState.container}>
       <Stack align="center" gap="md">
@@ -34,17 +36,16 @@ export function ListsEmptyState({
           stroke={1.2}
           color="var(--mantine-color-gray-4)"
         />
-        <Title order={3}>No tasks yet</Title>
+        <Title order={3}>{t('tasks.emptyState.title')}</Title>
         <Text c="dimmed" ta="center" maw={420}>
-          {workspaceName} doesn&apos;t have any tasks yet. Create your first task
-          to get started.
+          {t('tasks.emptyState.body', { workspaceName })}
         </Text>
         <Button
           variant="filled"
           pendoId={PENDO_IDS.lists.emptyState.cta}
           onClick={onCreateClick}
         >
-          Create your first task
+          {t('tasks.emptyState.cta')}
         </Button>
       </Stack>
     </Center>

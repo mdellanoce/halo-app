@@ -70,6 +70,7 @@
  */
 
 import { Modal, Group, Text } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
 import { K } from '../storage/keys'
@@ -80,6 +81,7 @@ export type ResetDemoDataModalProps = {
 }
 
 export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps): React.JSX.Element {
+  const { t } = useTranslation()
   const handleReset = () => {
     // 1. Bulk-wipe halo:v* prefix keys from localStorage.
     //
@@ -125,13 +127,12 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Reset demo data?"
+      title={t('settings.resetModal.title')}
       size="sm"
       centered
     >
       <Text size="md">
-        This will permanently delete all tasks, settings, and accounts in this browser,
-        and sign you out. This cannot be undone.
+        {t('settings.resetModal.body')}
       </Text>
       <Group justify="flex-end" mt="lg" gap="md">
         <Button
@@ -139,7 +140,7 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
           pendoId={PENDO_IDS.settings.dangerZone.confirmCancel}
           onClick={onClose}
         >
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button
           color="red"
@@ -147,7 +148,7 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
           pendoId={PENDO_IDS.settings.dangerZone.confirmButton}
           onClick={handleReset}
         >
-          Reset demo data
+          {t('settings.resetModal.confirm')}
         </Button>
       </Group>
     </Modal>

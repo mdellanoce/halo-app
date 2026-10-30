@@ -26,6 +26,7 @@
 import React from 'react'
 import { useSearchParams } from 'react-router'
 import { Stack, Tabs, Title } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
 import { ProfileTab } from '../../../settings/ProfileTab'
 import { WorkspaceTab } from '../../../settings/WorkspaceTab'
@@ -46,12 +47,13 @@ function parseTab(raw: string | null): TabValue {
 }
 
 export function SettingsPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const tab = parseTab(searchParams.get('tab'))
 
   return (
     <Stack gap="lg">
-      <Title order={3}>Settings</Title>
+      <Title order={3}>{t('settings.title')}</Title>
 
       <Tabs
         value={tab}
@@ -64,13 +66,13 @@ export function SettingsPage(): React.JSX.Element {
       >
         <Tabs.List>
           <Tabs.Tab value="profile" data-pendo-id={PENDO_IDS.settings.tabs.profile}>
-            Profile
+            {t('settings.tabs.profile')}
           </Tabs.Tab>
           <Tabs.Tab value="workspace" data-pendo-id={PENDO_IDS.settings.tabs.workspace}>
-            Workspace
+            {t('settings.tabs.workspace')}
           </Tabs.Tab>
           <Tabs.Tab value="preferences" data-pendo-id={PENDO_IDS.settings.tabs.preferences}>
-            Preferences
+            {t('settings.tabs.preferences')}
           </Tabs.Tab>
         </Tabs.List>
 

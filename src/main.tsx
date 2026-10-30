@@ -4,6 +4,7 @@ import '@mantine/notifications/styles.css'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { runMigrations } from './storage'
+import { getActiveLocale } from './i18n'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
@@ -30,8 +31,10 @@ dayjs.extend(utc)
 // Initialize Pendo exactly once at app entry with an empty visitor id.
 // The SDK resolves the previous visitor from cookies/localStorage if available,
 // otherwise falls back to a new anonymous visitor.
+// `visitor.locale` is the active UI locale (en | es | fr) resolved by
+// src/i18n at import time; PendoBridge re-sends it on sign-in and on change.
 pendo.initialize({
-  visitor: { id: '' },
+  visitor: { id: '', locale: getActiveLocale() },
 })
 
 const container = document.getElementById('root')

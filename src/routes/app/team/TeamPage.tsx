@@ -19,6 +19,7 @@
 import { useState, useMemo } from 'react'
 import { Stack, Group, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
+import { useTranslation } from 'react-i18next'
 import { IconUserPlus, IconCheck } from '@tabler/icons-react'
 import { Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
@@ -30,6 +31,7 @@ import { InviteTeammateModal } from '../../../team/components/InviteTeammateModa
 import type { WorkspaceRole } from '../../../team/types'
 
 export function TeamPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const visitor = useAuthStore((s) => s.currentVisitor)
   const workspace = useAuthStore((s) => s.currentWorkspace)
   const workspaceId = workspace?.id
@@ -51,7 +53,7 @@ export function TeamPage(): React.JSX.Element {
   const handleRoleChange = (teammateId: string, nextRole: WorkspaceRole) => {
     updateTeammate(workspaceId, teammateId, { workspaceRole: nextRole })
     notifications.show({
-      title: 'Role updated',
+      title: t('team.notifications.roleUpdated'),
       message: '',
       color: 'green',
       icon: <IconCheck size={18} />,
@@ -63,7 +65,7 @@ export function TeamPage(): React.JSX.Element {
   return (
     <Stack gap="lg">
       <Group justify="space-between" align="center">
-        <Title order={3}>Team</Title>
+        <Title order={3}>{t('team.title')}</Title>
         {teammates.length > 0 && (
           <Button
             variant="filled"
@@ -71,7 +73,7 @@ export function TeamPage(): React.JSX.Element {
             pendoId={PENDO_IDS.team.header.inviteButton}
             onClick={() => setInviteOpen(true)}
           >
-            Invite teammate
+            {t('team.inviteTeammate')}
           </Button>
         )}
       </Group>

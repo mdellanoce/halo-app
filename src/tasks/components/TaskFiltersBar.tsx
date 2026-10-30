@@ -12,12 +12,10 @@
  */
 
 import { Group } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 import { Select } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
-import {
-  TASK_STATUS_LABELS,
-  TASK_PRIORITY_LABELS,
-} from '../labels'
+import { taskStatusLabel, taskPriorityLabel } from '../labels'
 import { TaskStatusEnum, TaskPriorityEnum } from '../schemas'
 import { getAssigneeOptions } from '../assigneeOptions'
 import type { Visitor } from '../../auth/types'
@@ -35,8 +33,6 @@ export type TaskFiltersBarProps = {
   }) => void
 }
 
-const ALL_OPTION = { value: 'all', label: 'All' } as const
-
 export function TaskFiltersBar({
   workspaceId,
   visitor,
@@ -45,15 +41,17 @@ export function TaskFiltersBar({
   assigneeValue,
   onChange,
 }: TaskFiltersBarProps): React.JSX.Element {
+  const { t } = useTranslation()
+  const ALL_OPTION = { value: 'all', label: t('tasks.filters.all') }
   const statusOptions = [
     ALL_OPTION,
-    ...TaskStatusEnum.options.map((s) => ({ value: s, label: TASK_STATUS_LABELS[s] })),
+    ...TaskStatusEnum.options.map((s) => ({ value: s, label: taskStatusLabel(t, s) })),
   ]
   const priorityOptions = [
     ALL_OPTION,
     ...TaskPriorityEnum.options.map((p) => ({
       value: p,
-      label: TASK_PRIORITY_LABELS[p],
+      label: taskPriorityLabel(t, p),
     })),
   ]
   const assigneeOptions = [
@@ -64,7 +62,7 @@ export function TaskFiltersBar({
   return (
     <Group gap="md" data-pendo-id={PENDO_IDS.lists.filter.bar}>
       <Select
-        label="Status"
+        label={t('tasks.fields.status')}
         data={statusOptions}
         value={statusValue}
         onChange={(v) => onChange({ status: v ?? 'all' })}
@@ -73,7 +71,7 @@ export function TaskFiltersBar({
         pendoId={PENDO_IDS.lists.filter.status}
       />
       <Select
-        label="Priority"
+        label={t('tasks.fields.priority')}
         data={priorityOptions}
         value={priorityValue}
         onChange={(v) => onChange({ priority: v ?? 'all' })}
@@ -82,7 +80,7 @@ export function TaskFiltersBar({
         pendoId={PENDO_IDS.lists.filter.priority}
       />
       <Select
-        label="Assignee"
+        label={t('tasks.fields.assignee')}
         data={assigneeOptions}
         value={assigneeValue}
         onChange={(v) => onChange({ assignee: v ?? 'all' })}

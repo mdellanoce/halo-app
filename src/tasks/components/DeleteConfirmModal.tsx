@@ -24,6 +24,7 @@
  */
 
 import { Modal, Stack, Text, Group } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
@@ -41,16 +42,17 @@ export function DeleteConfirmModal({
   onConfirm,
   taskTitle,
 }: DeleteConfirmModalProps): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Delete this task?"
+      title={t('tasks.deleteConfirm.title')}
       size="sm"
       centered
     >
       <Stack gap="lg">
-        <Text size="md">Delete &quot;{taskTitle}&quot;? This cannot be undone.</Text>
+        <Text size="md">{t('tasks.deleteConfirm.body', { title: taskTitle })}</Text>
         <Group justify="flex-end" gap="md">
           <Button
             variant="default"
@@ -58,7 +60,7 @@ export function DeleteConfirmModal({
             pendoId={PENDO_IDS.lists.deleteConfirm.cancel}
             onClick={onClose}
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             color="red"
@@ -70,7 +72,7 @@ export function DeleteConfirmModal({
               onClose()
             }}
           >
-            Delete task
+            {t('tasks.deleteConfirm.confirm')}
           </Button>
         </Group>
       </Stack>

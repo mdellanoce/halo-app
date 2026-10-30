@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import {
   Stack,
   Group,
@@ -34,7 +36,7 @@ import {
 import { Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
 import { useAuthStore } from '../auth'
-import { listTasks, TASK_STATUS_LABELS } from '../tasks'
+import { listTasks, taskStatusLabel } from '../tasks'
 import { computeNowRef } from '../tasks/now-ref'
 import type { Task } from '../tasks'
 import { formatRelative } from './relative-time'
@@ -66,6 +68,7 @@ function rangeStartFor(nowRef: Date, range: Range): Date {
  * Computes the 5 KPI values (D-17).
  */
 function computeKpis(
+  translate: TFunction,
   tasks: Task[],
   nowRef: Date,
   range: Range,
@@ -113,13 +116,15 @@ function computeKpis(
   const avgCycleTime =
     cycleTasksInRange.length === 0
       ? '—'
-      : `${(
-          cycleTasksInRange.reduce((sum, t) => {
-            const completedMs = new Date(t.completedAt as string).getTime()
-            const createdMs = new Date(t.createdAt).getTime()
-            return sum + (completedMs - createdMs) / 86_400_000
-          }, 0) / cycleTasksInRange.length
-        ).toFixed(1)}d`
+      : translate('dashboard.kpis.daysValue', {
+          value: (
+            cycleTasksInRange.reduce((sum, task) => {
+              const completedMs = new Date(task.completedAt as string).getTime()
+              const createdMs = new Date(task.createdAt).getTime()
+              return sum + (completedMs - createdMs) / 86_400_000
+            }, 0) / cycleTasksInRange.length
+          ).toFixed(1),
+        })
 
   return { active, completedInRange, overdue, completionRate, avgCycleTime }
 }
@@ -160,21 +165,21 @@ function computeDayBuckets(tasks: Task[], nowRef: Date, range: Range): DayBucket
  * Produces the three status slices for the donut chart (D-19).
  * Always emits all three slices (even if value === 0) for consistent rendering.
  */
-function computeStatusSlices(tasks: Task[]): StatusSlice[] {
+function computeStatusSlices(t: TFunction, tasks: Task[]): StatusSlice[] {
   return [
     {
-      name: TASK_STATUS_LABELS.todo,
-      value: tasks.filter((t) => t.status === 'todo').length,
+      name: taskStatusLabel(t, 'todo'),
+      value: tasks.filter((task) => task.status === 'todo').length,
       status: 'todo',
     },
     {
-      name: TASK_STATUS_LABELS.in_progress,
-      value: tasks.filter((t) => t.status === 'in_progress').length,
+      name: taskStatusLabel(t, 'in_progress'),
+      value: tasks.filter((task) => task.status === 'in_progress').length,
       status: 'in_progress',
     },
     {
-      name: TASK_STATUS_LABELS.done,
-      value: tasks.filter((t) => t.status === 'done').length,
+      name: taskStatusLabel(t, 'done'),
+      value: tasks.filter((task) => task.status === 'done').length,
       status: 'done',
     },
   ]
@@ -243,17 +248,17 @@ function eventIconColor(verb: 'created' | 'updated' | 'completed'): {
 }
 
 function EmptyState({ onCta }: { onCta: () => void }): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <Center mih={400} data-pendo-id={PENDO_IDS.dashboard.emptyState.container}>
       <Stack align="center" gap="md">
         <IconClipboardCheck size={64} stroke={1.2} color="var(--mantine-color-gray-4)" />
-        <Title order={3}>No tasks yet</Title>
+        <Title order={3}>{t('dashboard.emptyState.title')}</Title>
         <Text c="dimmed" ta="center" maw={420}>
-          Looks like your workspace is fresh. Head over to Lists to create your first task and see
-          this dashboard come to life.
+          {t('dashboard.emptyState.body')}
         </Text>
         <Button variant="filled" pendoId={PENDO_IDS.dashboard.emptyState.cta} onClick={onCta}>
-          Go to Lists
+          {t('dashboard.emptyState.cta')}
         </Button>
       </Stack>
     </Center>
@@ -266,6 +271,7 @@ function EmptyState({ onCta }: { onCta: () => void }): React.JSX.Element {
 
 export function Dashboard(): React.JSX.Element {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const workspaceId = useAuthStore((s) => s.currentWorkspace?.id)
   const [range, setRange] = useState<Range>('30')
 
@@ -276,12 +282,12 @@ export function Dashboard(): React.JSX.Element {
   )
 
   const nowRef = useMemo(() => computeNowRef(tasks), [tasks])
-  const kpis = useMemo(() => computeKpis(tasks, nowRef, range), [tasks, nowRef, range])
+  const kpis = useMemo(() => computeKpis(t, tasks, nowRef, range), [t, tasks, nowRef, range])
   const dayBuckets = useMemo(
     () => computeDayBuckets(tasks, nowRef, range),
     [tasks, nowRef, range],
   )
-  const statusSlices = useMemo(() => computeStatusSlices(tasks), [tasks])
+  const statusSlices = useMemo(() => computeStatusSlices(t, tasks), [t, tasks])
   const recentEvents = useMemo(() => computeRecentEvents(tasks), [tasks])
 
   // RequireAuth + AppLayout already gate this; belt-and-suspenders
@@ -298,9 +304,9 @@ export function Dashboard(): React.JSX.Element {
       <Group justify="flex-end">
         <SegmentedControl
           data={[
-            { value: '7', label: '7d' },
-            { value: '30', label: '30d' },
-            { value: '90', label: '90d' },
+            { value: '7', label: t('dashboard.range.days', { days: 7 }) },
+            { value: '30', label: t('dashboard.range.days', { days: 30 }) },
+            { value: '90', label: t('dashboard.range.days', { days: 90 }) },
           ]}
           value={range}
           onChange={(v) => setRange(v as Range)}
@@ -312,27 +318,27 @@ export function Dashboard(): React.JSX.Element {
       <SimpleGrid cols={{ base: 1, sm: 2, md: 5 }} spacing="md">
         <KpiCard
           pendoId={PENDO_IDS.dashboard.kpi.active}
-          label="Active tasks"
+          label={t('dashboard.kpis.active')}
           value={kpis.active.toString()}
         />
         <KpiCard
           pendoId={PENDO_IDS.dashboard.kpi.completedInRange}
-          label="Completed in range"
+          label={t('dashboard.kpis.completedInRange')}
           value={kpis.completedInRange.toString()}
         />
         <KpiCard
           pendoId={PENDO_IDS.dashboard.kpi.overdue}
-          label="Overdue"
+          label={t('dashboard.kpis.overdue')}
           value={kpis.overdue.toString()}
         />
         <KpiCard
           pendoId={PENDO_IDS.dashboard.kpi.completionRate}
-          label="Completion rate"
+          label={t('dashboard.kpis.completionRate')}
           value={kpis.completionRate}
         />
         <KpiCard
           pendoId={PENDO_IDS.dashboard.kpi.avgCycleTime}
-          label="Avg cycle time"
+          label={t('dashboard.kpis.avgCycleTime')}
           value={kpis.avgCycleTime}
         />
       </SimpleGrid>
@@ -347,7 +353,7 @@ export function Dashboard(): React.JSX.Element {
           data-pendo-id={PENDO_IDS.dashboard.chart.completedPerDay}
         >
           <Text fw={600} mb="md">
-            Completed per day
+            {t('dashboard.charts.completedPerDay')}
           </Text>
           <ResponsiveContainer width="100%" height={240}>
             <AreaChart data={dayBuckets}>
@@ -358,6 +364,7 @@ export function Dashboard(): React.JSX.Element {
               <Area
                 type="monotone"
                 dataKey="count"
+                name={t('dashboard.charts.completedSeries')}
                 stroke="#3b5bdb"
                 fill="#4263eb"
                 fillOpacity={0.6}
@@ -374,7 +381,7 @@ export function Dashboard(): React.JSX.Element {
           data-pendo-id={PENDO_IDS.dashboard.chart.byStatus}
         >
           <Text fw={600} mb="md">
-            Tasks by status
+            {t('dashboard.charts.byStatus')}
           </Text>
           <ResponsiveContainer width="100%" height={240}>
             <PieChart>
@@ -410,7 +417,7 @@ export function Dashboard(): React.JSX.Element {
         data-pendo-id={PENDO_IDS.dashboard.activity.container}
       >
         <Text fw={600} mb="lg">
-          Recent activity
+          {t('dashboard.activity.title')}
         </Text>
         <Timeline active={-1} bulletSize={24} lineWidth={2}>
           {recentEvents.map(({ task, verb, eventAt }) => {
@@ -422,7 +429,10 @@ export function Dashboard(): React.JSX.Element {
                 color={color}
                 title={
                   <Text size="sm">
-                    {task.assignee.name} {verb} &quot;{task.title}&quot;
+                    {t(`dashboard.activity.${verb}`, {
+                      name: task.assignee.name,
+                      title: task.title,
+                    })}
                   </Text>
                 }
                 data-pendo-id={PENDO_IDS.dashboard.activity.item}

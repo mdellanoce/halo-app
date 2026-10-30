@@ -27,6 +27,8 @@ import { NavLink } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 import { useAuthStore } from '../../auth'
 import { seedDemoData } from '../../seed/seedAll'
+import { LanguageSwitcher } from '../../i18n/LanguageSwitcher'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Active-route detection helper (per D-12 and UI-SPEC §"Navbar contents").
@@ -71,6 +73,7 @@ export function AppLayout(): React.JSX.Element {
   const visitor = useAuthStore((s) => s.currentVisitor)
   const workspace = useAuthStore((s) => s.currentWorkspace)
   const colorScheme = useComputedColorScheme('light')
+  const { t } = useTranslation()
 
   /**
    * Phase 3 D-04: seeding is gated on meta.seededAt; subsequent mounts are
@@ -117,8 +120,9 @@ export function AppLayout(): React.JSX.Element {
               data-pendo-id={PENDO_IDS.topbar.logo}
             />
           </Box>
-          {/* Right: workspace name + user menu trigger */}
+          {/* Right: language switcher + workspace name + user menu trigger */}
           <Group gap="md">
+            <LanguageSwitcher pendoId={PENDO_IDS.topbar.languageSwitcher} />
             <Text size="sm" c="dimmed" data-pendo-id={PENDO_IDS.topbar.workspaceName}>
               {workspace.companyName}
             </Text>
@@ -142,14 +146,14 @@ export function AppLayout(): React.JSX.Element {
                   data-pendo-id={PENDO_IDS.topbar.userMenu.profile}
                   onClick={() => navigate('/app/settings?tab=profile')}
                 >
-                  Profile
+                  {t('topbar.profile')}
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<IconSettings size={16} />}
                   data-pendo-id={PENDO_IDS.topbar.userMenu.settings}
                   onClick={() => navigate('/app/settings')}
                 >
-                  Settings
+                  {t('topbar.settings')}
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item
@@ -157,7 +161,7 @@ export function AppLayout(): React.JSX.Element {
                   data-pendo-id={PENDO_IDS.topbar.userMenu.signout}
                   onClick={handleSignOut}
                 >
-                  Sign out
+                  {t('common.signOut')}
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
@@ -169,7 +173,7 @@ export function AppLayout(): React.JSX.Element {
         <Stack gap={8}>
           <NavLink
             pendoId={PENDO_IDS.nav.dashboard}
-            label="Dashboard"
+            label={t('nav.dashboard')}
             leftSection={<IconLayoutDashboard size={18} stroke={1.6} />}
             active={isNavActive(pathname, '/app')}
             variant="light"
@@ -177,7 +181,7 @@ export function AppLayout(): React.JSX.Element {
           />
           <NavLink
             pendoId={PENDO_IDS.nav.lists}
-            label="Lists"
+            label={t('nav.lists')}
             leftSection={<IconChecklist size={18} stroke={1.6} />}
             active={isNavActive(pathname, '/app/lists')}
             variant="light"
@@ -185,7 +189,7 @@ export function AppLayout(): React.JSX.Element {
           />
           <NavLink
             pendoId={PENDO_IDS.nav.reports}
-            label="Reports"
+            label={t('nav.reports')}
             leftSection={<IconChartBar size={18} stroke={1.6} />}
             active={isNavActive(pathname, '/app/reports')}
             variant="light"
@@ -193,7 +197,7 @@ export function AppLayout(): React.JSX.Element {
           />
           <NavLink
             pendoId={PENDO_IDS.nav.team}
-            label="Team"
+            label={t('nav.team')}
             leftSection={<IconUsers size={18} stroke={1.6} />}
             active={isNavActive(pathname, '/app/team')}
             variant="light"
@@ -201,7 +205,7 @@ export function AppLayout(): React.JSX.Element {
           />
           <NavLink
             pendoId={PENDO_IDS.nav.settings}
-            label="Settings"
+            label={t('nav.settings')}
             leftSection={<IconSettings size={18} stroke={1.6} />}
             active={isNavActive(pathname, '/app/settings')}
             variant="light"
@@ -209,7 +213,7 @@ export function AppLayout(): React.JSX.Element {
           />
           <NavLink
             pendoId={PENDO_IDS.nav.help}
-            label="Help"
+            label={t('nav.help')}
             leftSection={<IconHelpCircle size={18} stroke={1.6} />}
             active={isNavActive(pathname, '/app/help')}
             variant="light"

@@ -5,7 +5,12 @@
  * dependency — dayjs is in the recommended stack but not yet installed
  * (CLAUDE.md Recommended Stack section), and the activity feed only needs
  * 4 buckets.
+ *
+ * Strings resolve through the shared i18n instance (`dashboard.relativeTime.*`)
+ * at call time, so callers rendering under `useTranslation()` re-render with
+ * the active locale without passing `t` in.
  */
+import i18n from '../i18n'
 
 /**
  * Formats an ISO-8601 timestamp as a human-readable relative string.
@@ -34,20 +39,20 @@ export function formatRelative(isoTimestamp: string, nowRefIso: string): string 
   const deltaMs = Math.max(0, nowMs - tsMs)
 
   if (deltaMs < 60_000) {
-    return 'Just now'
+    return i18n.t('dashboard.relativeTime.justNow')
   }
 
   if (deltaMs < 3_600_000) {
-    return `${Math.floor(deltaMs / 60_000)}m ago`
+    return i18n.t('dashboard.relativeTime.minutesAgo', { n: Math.floor(deltaMs / 60_000) })
   }
 
   if (deltaMs < 86_400_000) {
-    return `${Math.floor(deltaMs / 3_600_000)}h ago`
+    return i18n.t('dashboard.relativeTime.hoursAgo', { n: Math.floor(deltaMs / 3_600_000) })
   }
 
   if (deltaMs < 172_800_000) {
-    return 'Yesterday'
+    return i18n.t('dashboard.relativeTime.yesterday')
   }
 
-  return `${Math.floor(deltaMs / 86_400_000)}d ago`
+  return i18n.t('dashboard.relativeTime.daysAgo', { n: Math.floor(deltaMs / 86_400_000) })
 }

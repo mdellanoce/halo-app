@@ -1,4 +1,5 @@
 import { IconSearch } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 import { TextInput } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
@@ -16,9 +17,10 @@ export type HelpSearchInputProps = {
 }
 
 export function HelpSearchInput({ value, onChange }: HelpSearchInputProps): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <TextInput
-      placeholder="Search articles"
+      placeholder={t('help.searchPlaceholder')}
       leftSection={<IconSearch size={16} />}
       value={value}
       onChange={(e) => onChange(e.currentTarget.value)}

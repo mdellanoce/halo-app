@@ -38,6 +38,7 @@
 import { useState, useMemo } from 'react'
 import { Stack, Group, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
+import { useTranslation } from 'react-i18next'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
@@ -52,6 +53,7 @@ import { ListsEmptyState } from '../../../tasks/components/ListsEmptyState'
 import { FilteredEmptyState } from '../../../tasks/components/FilteredEmptyState'
 
 export function ListsPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const visitor = useAuthStore((s) => s.currentVisitor)
   const workspace = useAuthStore((s) => s.currentWorkspace)
   const workspaceId = workspace?.id
@@ -103,7 +105,7 @@ export function ListsPage(): React.JSX.Element {
     <Stack gap="lg">
       {/* Page header */}
       <Group justify="space-between" align="center">
-        <Title order={3}>Tasks</Title>
+        <Title order={3}>{t('lists.title')}</Title>
         {allTasks.length > 0 && (
           <Button
             variant="filled"
@@ -111,7 +113,7 @@ export function ListsPage(): React.JSX.Element {
             pendoId={PENDO_IDS.lists.newTaskButton}
             onClick={() => setCreateOpen(true)}
           >
-            New task
+            {t('lists.newTask')}
           </Button>
         )}
       </Group>
@@ -189,7 +191,7 @@ export function ListsPage(): React.JSX.Element {
           if (deleteTarget) {
             deleteTask(workspaceId, deleteTarget.id)
             notifications.show({
-              title: 'Task deleted',
+              title: t('lists.notifications.deleted'),
               message: '',
               color: 'red',
               icon: <IconTrash size={18} />,

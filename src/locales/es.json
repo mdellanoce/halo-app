@@ -1,0 +1,379 @@
+{
+  "common": {
+    "language": "Idioma",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "loading": "Cargando…",
+    "create": "Crear",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "continue": "Continuar",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "signUp": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "demoBanner": "Solo datos de demostración — nunca introduzcas credenciales reales"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "lists": "Listas",
+    "reports": "Informes",
+    "team": "Equipo",
+    "settings": "Configuración",
+    "help": "Ayuda"
+  },
+  "topbar": {
+    "profile": "Perfil",
+    "settings": "Configuración"
+  },
+  "preferences": {
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "language": "Idioma",
+    "languageDescription": "Por defecto usa el idioma de tu navegador. Tu elección se guarda en este navegador.",
+    "dangerZone": "Zona de peligro",
+    "dangerZoneBody": "Restablece todos los datos de demostración de este espacio de trabajo. Esto eliminará permanentemente todas las tareas, configuraciones y cuentas de este navegador, y cerrará tu sesión.",
+    "resetDemoData": "Restablecer datos de demostración"
+  },
+  "landing": {
+    "tagline": "Una aplicación de demostración para gestión de proyectos y tareas. Todos los datos son ficticios y se guardan solo en tu navegador — puedes explorar sin introducir información real.",
+    "signInLink": "Iniciar sesión (Fase 2)",
+    "signUpLink": "Registrarse (Fase 2)"
+  },
+  "signin": {
+    "title": "Bienvenido de nuevo",
+    "invalidCredentials": "El correo y la contraseña no coinciden. Inténtalo de nuevo.",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "noAccount": "¿No tienes una cuenta?",
+    "createAccountLink": "Crea una"
+  },
+  "signup": {
+    "title": "Crea tu cuenta de Halo",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "steps": {
+      "account": "Cuenta",
+      "aboutYou": "Sobre ti",
+      "company": "Empresa",
+      "setup": "Configuración"
+    },
+    "errors": {
+      "emailDuplicate": "Ya existe una cuenta con este correo.",
+      "usernameTaken": "Ese nombre de usuario ya está en uso — prueba con otro.",
+      "generic": "Algo salió mal — inténtalo de nuevo."
+    },
+    "step1": {
+      "intro": "Bienvenido a Halo. Cuéntanos quién eres y prepararemos tu espacio de trabajo.",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "emailDescription": "Lo usaremos para iniciar sesión. Ningún correo real sale de tu navegador.",
+      "signInInstead": "¿Iniciar sesión en su lugar?",
+      "passwordPlaceholder": "Al menos 8 caracteres",
+      "passwordDescription": "Cifrada localmente y guardada en tu navegador — no hay servidor.",
+      "usernameLabel": "Nombre de usuario",
+      "usernameDescription": "Visible en tu perfil y en la página del equipo."
+    },
+    "step2": {
+      "title": "Un poco sobre ti",
+      "jobTitleLabel": "Cargo",
+      "jobTitlePlaceholder": "Gerente de producto sénior",
+      "roleLabel": "Rol",
+      "rolePlaceholder": "Selecciona tu rol",
+      "roles": {
+        "product": "Producto",
+        "engineering": "Ingeniería",
+        "design": "Diseño",
+        "marketing": "Marketing",
+        "sales": "Ventas",
+        "operations": "Operaciones",
+        "other": "Otro"
+      },
+      "yearsExperienceLabel": "Años de experiencia",
+      "locationLabel": "Ubicación",
+      "locationPlaceholder": "Berlín, Alemania"
+    },
+    "step3": {
+      "title": "Sobre tu empresa",
+      "companyNameLabel": "Nombre de la empresa",
+      "companySizeLabel": "Tamaño de la empresa",
+      "companySizePlaceholder": "Selecciona el tamaño del equipo",
+      "industryLabel": "Sector",
+      "industryPlaceholder": "Selecciona un sector",
+      "industries": {
+        "software": "Software",
+        "financialServices": "Servicios financieros",
+        "healthcare": "Salud",
+        "retail": "Comercio minorista / e-commerce",
+        "manufacturing": "Manufactura",
+        "education": "Educación",
+        "other": "Otro"
+      },
+      "planLabel": "Plan",
+      "planPlaceholder": "Elige un plan",
+      "planDescription": "Puedes cambiarlo más tarde en Configuración.",
+      "plans": {
+        "free": "Gratis",
+        "pro": "Pro",
+        "enterprise": "Empresarial"
+      }
+    },
+    "step4": {
+      "title": "Configura tu espacio de trabajo",
+      "useCaseLabel": "¿Para qué usarás Halo?",
+      "useCasePlaceholder": "Elige lo que mejor encaje",
+      "useCases": {
+        "projectManagement": "Gestión de proyectos",
+        "taskTracking": "Seguimiento de tareas",
+        "teamCoordination": "Coordinación de equipos",
+        "personalProductivity": "Productividad personal",
+        "justExploring": "Solo estoy explorando"
+      },
+      "teamSizeLabel": "¿Cuántas personas hay en tu equipo?",
+      "goalsLabel": "¿Qué esperas conseguir con Halo?",
+      "goalsPlaceholder": "Elige hasta tres",
+      "goalsDescription": "Selecciona hasta tres.",
+      "goals": {
+        "shipFaster": "Entregar más rápido",
+        "betterVisibility": "Mejor visibilidad",
+        "lessContextSwitching": "Menos cambios de contexto",
+        "cleanerReporting": "Informes más claros",
+        "onboardTeam": "Incorporar al equipo",
+        "replaceTool": "Reemplazar otra herramienta"
+      },
+      "createAccount": "Crear cuenta"
+    }
+  },
+  "dashboard": {
+    "range": {
+      "days": "{{days}} d"
+    },
+    "kpis": {
+      "active": "Tareas activas",
+      "completedInRange": "Completadas en el período",
+      "overdue": "Vencidas",
+      "completionRate": "Tasa de finalización",
+      "avgCycleTime": "Tiempo de ciclo prom.",
+      "daysValue": "{{value}} d"
+    },
+    "charts": {
+      "completedPerDay": "Completadas por día",
+      "completedSeries": "Completadas",
+      "byStatus": "Tareas por estado"
+    },
+    "activity": {
+      "title": "Actividad reciente",
+      "created": "{{name}} creó «{{title}}»",
+      "updated": "{{name}} actualizó «{{title}}»",
+      "completed": "{{name}} completó «{{title}}»"
+    },
+    "emptyState": {
+      "title": "Aún no hay tareas",
+      "body": "Parece que tu espacio de trabajo es nuevo. Ve a Listas para crear tu primera tarea y ver cómo cobra vida este panel.",
+      "cta": "Ir a Listas"
+    },
+    "relativeTime": {
+      "justNow": "Justo ahora",
+      "minutesAgo": "hace {{n}} min",
+      "hoursAgo": "hace {{n}} h",
+      "yesterday": "Ayer",
+      "daysAgo": "hace {{n}} d"
+    }
+  },
+  "lists": {
+    "title": "Tareas",
+    "newTask": "Nueva tarea",
+    "notifications": {
+      "deleted": "Tarea eliminada"
+    }
+  },
+  "tasks": {
+    "status": {
+      "todo": "Por hacer",
+      "in_progress": "En curso",
+      "done": "Hecha"
+    },
+    "priority": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta",
+      "urgent": "Urgente"
+    },
+    "fields": {
+      "title": "Título",
+      "description": "Descripción",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "assignee": "Responsable",
+      "dueDate": "Fecha de vencimiento"
+    },
+    "filters": {
+      "all": "Todos"
+    },
+    "form": {
+      "createTitle": "Nueva tarea",
+      "editTitle": "Editar tarea",
+      "delete": "Eliminar tarea",
+      "discard": "Descartar",
+      "submitCreate": "Crear tarea",
+      "submitSave": "Guardar cambios"
+    },
+    "notifications": {
+      "created": "Tarea creada",
+      "saved": "Cambios guardados"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar esta tarea?",
+      "body": "¿Eliminar «{{title}}»? Esta acción no se puede deshacer.",
+      "confirm": "Eliminar tarea"
+    },
+    "emptyState": {
+      "title": "Aún no hay tareas",
+      "body": "{{workspaceName}} aún no tiene tareas. Crea tu primera tarea para empezar.",
+      "cta": "Crea tu primera tarea"
+    },
+    "filteredEmpty": {
+      "message": "Ninguna tarea coincide con estos filtros.",
+      "clear": "Borrar filtros"
+    },
+    "table": {
+      "markComplete": "Marcar «{{title}}» como completada",
+      "actionsFor": "Acciones para «{{title}}»"
+    }
+  },
+  "reports": {
+    "title": "Informes",
+    "exportCsv": "Exportar CSV",
+    "chart": {
+      "title": "Tareas por estado y día"
+    },
+    "table": {
+      "title": "Título",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "assignee": "Responsable",
+      "dueDate": "Fecha límite",
+      "completedAt": "Completada el",
+      "empty": "Ninguna tarea coincide con estos filtros."
+    },
+    "filters": {
+      "dateRange": "Rango de fechas",
+      "assignee": "Responsable",
+      "status": "Estado",
+      "all": "Todos"
+    }
+  },
+  "team": {
+    "title": "Equipo",
+    "inviteTeammate": "Invitar a un compañero",
+    "notifications": {
+      "roleUpdated": "Rol actualizado"
+    },
+    "emptyState": {
+      "title": "Aún no hay compañeros",
+      "description": "Invita a tu primer compañero para empezar a colaborar en {{workspaceName}}."
+    },
+    "table": {
+      "name": "Nombre",
+      "role": "Rol",
+      "lastActive": "Última actividad",
+      "invited": "Invitado"
+    },
+    "roles": {
+      "owner": "Propietario",
+      "admin": "Administrador",
+      "member": "Miembro",
+      "viewer": "Lector"
+    },
+    "invite": {
+      "role": "Rol",
+      "submit": "Enviar invitación",
+      "sentTitle": "Invitación enviada",
+      "sentMessage": "Enviada a {{email}}",
+      "errors": {
+        "emailRequired": "Introduce un correo electrónico.",
+        "emailInvalid": "Introduce un correo electrónico válido.",
+        "roleRequired": "Elige un rol.",
+        "duplicate": "{{email}} ya es un compañero."
+      }
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "tabs": {
+      "profile": "Perfil",
+      "workspace": "Espacio de trabajo",
+      "preferences": "Preferencias"
+    },
+    "discardChanges": "Descartar cambios",
+    "errorTitle": "Algo salió mal",
+    "errorMessage": "Inténtalo de nuevo.",
+    "profile": {
+      "saved": "Perfil guardado",
+      "save": "Guardar perfil",
+      "username": "Nombre de usuario",
+      "jobTitle": "Cargo",
+      "role": "Rol",
+      "rolePlaceholder": "Selecciona un rol",
+      "location": "Ubicación",
+      "roles": {
+        "product": "Producto",
+        "engineering": "Ingeniería",
+        "design": "Diseño",
+        "marketing": "Marketing",
+        "sales": "Ventas",
+        "operations": "Operaciones",
+        "other": "Otro"
+      }
+    },
+    "workspace": {
+      "saved": "Espacio de trabajo guardado",
+      "save": "Guardar espacio de trabajo",
+      "companyName": "Nombre de la empresa",
+      "companySize": "Tamaño de la empresa",
+      "companySizePlaceholder": "Selecciona el tamaño del equipo",
+      "industry": "Sector",
+      "industryPlaceholder": "Selecciona un sector",
+      "plan": "Plan",
+      "planPlaceholder": "Elige un plan",
+      "industries": {
+        "software": "Software",
+        "financialServices": "Servicios financieros",
+        "healthcare": "Salud",
+        "retail": "Comercio minorista / e-commerce",
+        "manufacturing": "Fabricación",
+        "education": "Educación",
+        "other": "Otro"
+      },
+      "plans": {
+        "free": "Gratuito",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      }
+    },
+    "resetModal": {
+      "title": "¿Restablecer los datos de demostración?",
+      "body": "Esto eliminará de forma permanente todas las tareas, la configuración y las cuentas de este navegador, y cerrará tu sesión. Esta acción no se puede deshacer.",
+      "confirm": "Restablecer datos de demostración"
+    }
+  },
+  "help": {
+    "title": "Ayuda",
+    "searchPlaceholder": "Buscar artículos",
+    "noResults": {
+      "message": "Ningún artículo coincide con «{{query}}». Prueba con otra palabra clave.",
+      "clear": "Borrar búsqueda"
+    },
+    "article": {
+      "notFoundTitle": "Artículo no encontrado",
+      "notFoundBody": "No encontramos ningún artículo de ayuda en esta URL. Es posible que se haya movido o eliminado.",
+      "backLink": "← Volver a Ayuda"
+    }
+  }
+}

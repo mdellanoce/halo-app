@@ -6,6 +6,8 @@
  *
  *   - When the user signs in (`isAuthenticated` becomes true):
  *     calls `pendo.identify(...)` with the full visitor + account metadata.
+ *     `visitor.locale` carries the active UI locale; changing language
+ *     re-runs the identify so Pendo sees the new locale.
  *   - When the user signs out (`isAuthenticated` becomes false after being true):
  *     calls `pendo.clearSession()` to reset to an anonymous visitor.
  *
@@ -14,13 +16,19 @@
  */
 
 import { useEffect, useRef, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../auth/authStore'
+import { getActiveLocale } from '../i18n'
 
 export function PendoBridge({ children }: { children: ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const currentVisitor = useAuthStore((s) => s.currentVisitor)
   const currentWorkspace = useAuthStore((s) => s.currentWorkspace)
   const wasAuthenticated = useRef(false)
+  // useTranslation re-renders on languageChanged, so the effect below re-runs
+  // with the new locale.
+  useTranslation()
+  const locale = getActiveLocale()
 
   useEffect(() => {
     if (isAuthenticated && currentVisitor && currentWorkspace) {
@@ -40,6 +48,7 @@ export function PendoBridge({ children }: { children: ReactNode }) {
           teamSize: currentVisitor.teamSize,
           topGoals: currentVisitor.topGoals,
           createdAt: currentVisitor.createdAt,
+          locale,
         },
         account: {
           id: currentWorkspace.id,
@@ -56,7 +65,7 @@ export function PendoBridge({ children }: { children: ReactNode }) {
       pendo.clearSession()
       wasAuthenticated.current = false
     }
-  }, [isAuthenticated, currentVisitor, currentWorkspace])
+  }, [isAuthenticated, currentVisitor, currentWorkspace, locale])
 
   return <>{children}</>
 }

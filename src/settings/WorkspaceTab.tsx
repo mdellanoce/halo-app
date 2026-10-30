@@ -35,6 +35,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Stack, Group } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
+import { useTranslation } from 'react-i18next'
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react'
 import { TextInput, Select, Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
@@ -62,6 +63,18 @@ const INDUSTRY_OPTIONS = [
 
 const PLAN_OPTIONS = ['Free', 'Pro', 'Enterprise'] as const
 
+// Stored enum value → catalog key suffix for the translated Select labels.
+// Values stay English (they're persisted + sent to Pendo); only labels localize.
+const INDUSTRY_LABEL_KEYS: Record<(typeof INDUSTRY_OPTIONS)[number], string> = {
+  Software: 'software',
+  'Financial services': 'financialServices',
+  Healthcare: 'healthcare',
+  'Retail / e-commerce': 'retail',
+  Manufacturing: 'manufacturing',
+  Education: 'education',
+  Other: 'other',
+}
+
 /**
  * Workspace form schema derived from WorkspaceSchema via `.pick()`. The four
  * fields here are the canonical SET-03 set. Defined locally for the same
@@ -77,6 +90,7 @@ const WorkspaceFormSchema = WorkspaceSchema.pick({
 type WorkspaceFormValues = z.infer<typeof WorkspaceFormSchema>
 
 export function WorkspaceTab(): React.JSX.Element | null {
+  const { t } = useTranslation()
   const workspace = useAuthStore((s) => s.currentWorkspace)
 
   if (!workspace) return null
@@ -97,7 +111,7 @@ export function WorkspaceTab(): React.JSX.Element | null {
     if (updated) {
       useAuthStore.setState({ currentWorkspace: updated })
       notifications.show({
-        title: 'Workspace saved',
+        title: t('settings.workspace.saved'),
         message: '',
         color: 'green',
         icon: <IconCheck size={18} />,
@@ -108,8 +122,8 @@ export function WorkspaceTab(): React.JSX.Element | null {
       // for account metadata) slots in here once PendoBridge is real.
     } else {
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again.',
+        title: t('settings.errorTitle'),
+        message: t('settings.errorMessage'),
         color: 'red',
         icon: <IconAlertCircle size={18} />,
         autoClose: 5000,
@@ -122,14 +136,14 @@ export function WorkspaceTab(): React.JSX.Element | null {
       <Stack gap="md" maw={480}>
         <TextInput
           {...form.register('companyName')}
-          label="Company name"
+          label={t('settings.workspace.companyName')}
           error={form.formState.errors.companyName?.message}
           pendoId={PENDO_IDS.settings.workspace.companyName}
         />
         <Group gap="md" grow>
           <Select
-            label="Company size"
-            placeholder="Select team size"
+            label={t('settings.workspace.companySize')}
+            placeholder={t('settings.workspace.companySizePlaceholder')}
             data={[...COMPANY_SIZE_OPTIONS]}
             value={form.watch('companySize') ?? null}
             onChange={(value) => {
@@ -154,9 +168,12 @@ export function WorkspaceTab(): React.JSX.Element | null {
             pendoId={PENDO_IDS.settings.workspace.companySize}
           />
           <Select
-            label="Industry"
-            placeholder="Select an industry"
-            data={[...INDUSTRY_OPTIONS]}
+            label={t('settings.workspace.industry')}
+            placeholder={t('settings.workspace.industryPlaceholder')}
+            data={INDUSTRY_OPTIONS.map((value) => ({
+              value,
+              label: t(`settings.workspace.industries.${INDUSTRY_LABEL_KEYS[value]}`),
+            }))}
             value={form.watch('industry') ?? null}
             onChange={(value) => {
               if (value === null) {
@@ -181,9 +198,12 @@ export function WorkspaceTab(): React.JSX.Element | null {
           />
         </Group>
         <Select
-          label="Plan"
-          placeholder="Choose a plan"
-          data={[...PLAN_OPTIONS]}
+          label={t('settings.workspace.plan')}
+          placeholder={t('settings.workspace.planPlaceholder')}
+          data={PLAN_OPTIONS.map((value) => ({
+            value,
+            label: t(`settings.workspace.plans.${value.toLowerCase()}`),
+          }))}
           value={form.watch('planTier') ?? null}
           onChange={(value) => {
             if (value === null) {
@@ -213,7 +233,7 @@ export function WorkspaceTab(): React.JSX.Element | null {
             pendoId={PENDO_IDS.settings.workspace.cancel}
             onClick={() => form.reset()}
           >
-            Discard changes
+            {t('settings.discardChanges')}
           </Button>
           <Button
             type="submit"
@@ -221,7 +241,7 @@ export function WorkspaceTab(): React.JSX.Element | null {
             disabled={!form.formState.isDirty}
             pendoId={PENDO_IDS.settings.workspace.save}
           >
-            Save workspace
+            {t('settings.workspace.save')}
           </Button>
         </Group>
       </Stack>

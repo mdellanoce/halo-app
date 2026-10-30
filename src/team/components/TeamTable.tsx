@@ -23,6 +23,7 @@
  */
 
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Paper, Table, Avatar, Badge, Text, Group } from '@mantine/core'
 import { Select } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
@@ -36,6 +37,7 @@ export type TeamTableProps = {
 }
 
 export function TeamTable({ teammates, onRoleChange }: TeamTableProps): React.JSX.Element {
+  const { t } = useTranslation()
   // Use current time as nowRef for last-active relative formatting.
   // The team page is not anchored to task activity (unlike Dashboard/Reports).
   const nowRefIso = useMemo(() => new Date().toISOString(), [])
@@ -75,68 +77,68 @@ export function TeamTable({ teammates, onRoleChange }: TeamTableProps): React.JS
         <Table.Thead>
           <Table.Tr>
             <Table.Th className={classes.cell}>
-              <Text size="sm" fw={500} c="dimmed">Name</Text>
+              <Text size="sm" fw={500} c="dimmed">{t('team.table.name')}</Text>
             </Table.Th>
             <Table.Th className={classes.cell}>
-              <Text size="sm" fw={500} c="dimmed">Email</Text>
+              <Text size="sm" fw={500} c="dimmed">{t('common.email')}</Text>
             </Table.Th>
             <Table.Th className={classes.cell}>
-              <Text size="sm" fw={500} c="dimmed">Role</Text>
+              <Text size="sm" fw={500} c="dimmed">{t('team.table.role')}</Text>
             </Table.Th>
             <Table.Th className={classes.cell}>
-              <Text size="sm" fw={500} c="dimmed">Last active</Text>
+              <Text size="sm" fw={500} c="dimmed">{t('team.table.lastActive')}</Text>
             </Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {orderedTeammates.map((t) => {
-            const firstInitial = (t.firstName[0] ?? '').toUpperCase()
-            const lastInitial = (t.lastName[0] ?? '').toUpperCase()
+          {orderedTeammates.map((tm) => {
+            const firstInitial = (tm.firstName[0] ?? '').toUpperCase()
+            const lastInitial = (tm.lastName[0] ?? '').toUpperCase()
             const initials = firstInitial || lastInitial
               ? `${firstInitial}${lastInitial}`
-              : (t.email[0] ?? '').toUpperCase()
+              : (tm.email[0] ?? '').toUpperCase()
 
             return (
-              <Table.Tr key={t.id}>
+              <Table.Tr key={tm.id}>
                 {/* Name cell: avatar + name + Invited badge */}
                 <Table.Td className={classes.cell}>
                   <Group gap={8}>
-                    <Avatar size="sm" color="indigo" radius="xl" src={t.avatar ?? null}>
+                    <Avatar size="sm" color="indigo" radius="xl" src={tm.avatar ?? null}>
                       {initials}
                     </Avatar>
-                    <Text size="sm">{t.firstName} {t.lastName}</Text>
-                    {t.status === 'invited' && (
-                      <Badge color="yellow" variant="light" size="sm">Invited</Badge>
+                    <Text size="sm">{tm.firstName} {tm.lastName}</Text>
+                    {tm.status === 'invited' && (
+                      <Badge color="yellow" variant="light" size="sm">{t('team.table.invited')}</Badge>
                     )}
                   </Group>
                 </Table.Td>
 
                 {/* Email cell */}
                 <Table.Td className={classes.cell}>
-                  <Text size="sm">{t.email}</Text>
+                  <Text size="sm">{tm.email}</Text>
                 </Table.Td>
 
                 {/* Role cell — Mechanism A (D-02): Owner row shows disabled 'Owner' option */}
                 <Table.Td className={classes.cell}>
                   <Select
-                    value={t.workspaceRole}
+                    value={tm.workspaceRole}
                     data={
-                      t.workspaceRole === 'Owner'
-                        ? [{ value: 'Owner', label: 'Owner', disabled: true }]
+                      tm.workspaceRole === 'Owner'
+                        ? [{ value: 'Owner', label: t('team.roles.owner'), disabled: true }]
                         : [
-                            { value: 'Admin', label: 'Admin' },
-                            { value: 'Member', label: 'Member' },
-                            { value: 'Viewer', label: 'Viewer' },
+                            { value: 'Admin', label: t('team.roles.admin') },
+                            { value: 'Member', label: t('team.roles.member') },
+                            { value: 'Viewer', label: t('team.roles.viewer') },
                           ]
                     }
-                    disabled={t.workspaceRole === 'Owner'}
+                    disabled={tm.workspaceRole === 'Owner'}
                     onChange={(value) => {
-                      if (value && value !== t.workspaceRole) {
-                        onRoleChange(t.id, value as WorkspaceRole)
+                      if (value && value !== tm.workspaceRole) {
+                        onRoleChange(tm.id, value as WorkspaceRole)
                       }
                     }}
                     pendoId={PENDO_IDS.team.row.roleSelect}
-                    data-pendo-teammate-id={t.id}
+                    data-pendo-teammate-id={tm.id}
                     size="sm"
                     w={140}
                     allowDeselect={false}
@@ -145,8 +147,8 @@ export function TeamTable({ teammates, onRoleChange }: TeamTableProps): React.JS
 
                 {/* Last active cell */}
                 <Table.Td className={classes.cell}>
-                  <Text size="sm" c={t.lastActiveAt ? undefined : 'dimmed'}>
-                    {t.lastActiveAt ? formatRelative(t.lastActiveAt, nowRefIso) : '—'}
+                  <Text size="sm" c={tm.lastActiveAt ? undefined : 'dimmed'}>
+                    {tm.lastActiveAt ? formatRelative(tm.lastActiveAt, nowRefIso) : '—'}
                   </Text>
                 </Table.Td>
               </Table.Tr>
