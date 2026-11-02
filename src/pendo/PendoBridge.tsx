@@ -27,15 +27,11 @@ export function PendoBridge({ children }: { children: ReactNode }) {
       pendo.identify({
         visitor: {
           id: currentVisitor.id,
-          email: currentVisitor.email,
           full_name: `${currentVisitor.firstName} ${currentVisitor.lastName}`,
-          firstName: currentVisitor.firstName,
-          lastName: currentVisitor.lastName,
           username: currentVisitor.username,
           jobTitle: currentVisitor.jobTitle,
           role: currentVisitor.role,
           yearsExperience: currentVisitor.yearsExperience,
-          location: currentVisitor.location,
           primaryUseCase: currentVisitor.primaryUseCase,
           teamSize: currentVisitor.teamSize,
           topGoals: currentVisitor.topGoals,
@@ -44,7 +40,6 @@ export function PendoBridge({ children }: { children: ReactNode }) {
         account: {
           id: currentWorkspace.id,
           name: currentWorkspace.companyName,
-          companyName: currentWorkspace.companyName,
           companySize: currentWorkspace.companySize,
           industry: currentWorkspace.industry,
           planTier: currentWorkspace.planTier,
