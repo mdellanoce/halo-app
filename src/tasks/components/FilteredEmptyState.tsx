@@ -11,6 +11,7 @@
  */
 
 import { Center, Stack, Text, Anchor as MantineAnchor } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
 export type FilteredEmptyStateProps = {
@@ -20,10 +21,11 @@ export type FilteredEmptyStateProps = {
 export function FilteredEmptyState({
   onClearFilters,
 }: FilteredEmptyStateProps): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <Center py="xl" data-pendo-id={PENDO_IDS.lists.filteredEmpty.container}>
       <Stack align="center" gap="sm">
-        <Text c="dimmed">No tasks match these filters.</Text>
+        <Text c="dimmed">{t('tasks.filteredEmpty.message')}</Text>
         {/*
          * Polymorphic <Anchor component="button"> needs Mantine's polymorphic
          * typing which the Halo Anchor wrapper doesn't currently expose. Use
@@ -38,7 +40,7 @@ export function FilteredEmptyState({
           data-pendo-id={PENDO_IDS.lists.filteredEmpty.clearLink}
           onClick={onClearFilters}
         >
-          Clear filters
+          {t('tasks.filteredEmpty.clear')}
         </MantineAnchor>
       </Stack>
     </Center>

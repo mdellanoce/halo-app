@@ -21,12 +21,14 @@
 import { useState, useMemo } from 'react'
 import { Stack, Title } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
+import { useTranslation } from 'react-i18next'
 import { listHelpArticles } from '../../../help/helpArticles'
 import { HelpSearchInput } from '../../../help/components/HelpSearchInput'
 import { HelpList } from '../../../help/components/HelpList'
 import { HelpNoResultsState } from '../../../help/components/HelpNoResultsState'
 
 export function HelpPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const [query, setQuery] = useState('')
   // D-08: 150ms debounce — second element (cancel fn) is intentionally unused.
   const [debouncedQuery] = useDebouncedValue(query, 150)
@@ -46,7 +48,7 @@ export function HelpPage(): React.JSX.Element {
 
   return (
     <Stack gap="lg">
-      <Title order={3}>Help</Title>
+      <Title order={3}>{t('help.title')}</Title>
       <HelpSearchInput value={query} onChange={setQuery} />
       {filtered.length === 0 && debouncedQuery.trim() !== ''
         ? <HelpNoResultsState query={debouncedQuery} onClear={() => setQuery('')} />

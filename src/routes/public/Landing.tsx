@@ -1,5 +1,6 @@
 import React from 'react'
 import { Anchor, Image, Stack, Text, useComputedColorScheme } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Phase 1 landing page — placeholder for the public index route `/`.
@@ -12,6 +13,7 @@ import { Anchor, Image, Stack, Text, useComputedColorScheme } from '@mantine/cor
  *     run yet in the wave order, so the wrapped primitive is not available here.
  */
 export function Landing(): React.JSX.Element {
+  const { t } = useTranslation()
   const colorScheme = useComputedColorScheme('light')
   return (
     <Stack gap="lg" pt="xl">
@@ -23,12 +25,11 @@ export function Landing(): React.JSX.Element {
         fit="contain"
       />
       <Text c="dimmed" size="lg">
-        A demo project and task management app. All data is fabricated and persisted only
-        in your browser — safe to explore without entering real information.
+        {t('landing.tagline')}
       </Text>
       <Stack gap="xs">
-        <Anchor href="/signin">Sign in (Phase 2)</Anchor>
-        <Anchor href="/signup">Sign up (Phase 2)</Anchor>
+        <Anchor href="/signin">{t('landing.signInLink')}</Anchor>
+        <Anchor href="/signup">{t('landing.signUpLink')}</Anchor>
       </Stack>
     </Stack>
   )

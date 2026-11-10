@@ -1,4 +1,5 @@
 import { Center, Stack, Text, Anchor as MantineAnchor } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
 /**
@@ -17,11 +18,12 @@ export function HelpNoResultsState({
   query,
   onClear,
 }: HelpNoResultsStateProps): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <Center py="xl" data-pendo-id={PENDO_IDS.help.noResults.container}>
       <Stack align="center" gap="sm">
         <Text c="dimmed" ta="center">
-          No articles match &quot;{query}&quot;. Try a different keyword.
+          {t('help.noResults.message', { query })}
         </Text>
         {/*
          * S3 polymorphic-Anchor exception: raw Mantine Anchor with
@@ -37,7 +39,7 @@ export function HelpNoResultsState({
           data-pendo-id={PENDO_IDS.help.noResults.clearLink}
           onClick={onClear}
         >
-          Clear search
+          {t('help.noResults.clear')}
         </MantineAnchor>
       </Stack>
     </Center>

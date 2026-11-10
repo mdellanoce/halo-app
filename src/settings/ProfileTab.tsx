@@ -33,6 +33,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Stack, Group } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
+import { useTranslation } from 'react-i18next'
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react'
 import { TextInput, Select, Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
@@ -70,6 +71,7 @@ const ProfileFormSchema = VisitorSchema.pick({
 type ProfileFormValues = z.infer<typeof ProfileFormSchema>
 
 export function ProfileTab(): React.JSX.Element | null {
+  const { t } = useTranslation()
   const visitor = useAuthStore((s) => s.currentVisitor)
 
   // Defensive narrowing — RequireAuth (Phase 2 lock) gates /app/* so a
@@ -98,7 +100,7 @@ export function ProfileTab(): React.JSX.Element | null {
     if (updated) {
       useAuthStore.setState({ currentVisitor: updated })
       notifications.show({
-        title: 'Profile saved',
+        title: t('settings.profile.saved'),
         message: '',
         color: 'green',
         icon: <IconCheck size={18} />,
@@ -112,8 +114,8 @@ export function ProfileTab(): React.JSX.Element | null {
       // alongside notifications.show.
     } else {
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again.',
+        title: t('settings.errorTitle'),
+        message: t('settings.errorMessage'),
         color: 'red',
         icon: <IconAlertCircle size={18} />,
         autoClose: 5000,
@@ -127,33 +129,36 @@ export function ProfileTab(): React.JSX.Element | null {
         <Group gap="md" grow>
           <TextInput
             {...form.register('firstName')}
-            label="First name"
+            label={t('common.firstName')}
             error={form.formState.errors.firstName?.message}
             pendoId={PENDO_IDS.settings.profile.firstName}
           />
           <TextInput
             {...form.register('lastName')}
-            label="Last name"
+            label={t('common.lastName')}
             error={form.formState.errors.lastName?.message}
             pendoId={PENDO_IDS.settings.profile.lastName}
           />
         </Group>
         <TextInput
           {...form.register('username')}
-          label="Username"
+          label={t('settings.profile.username')}
           error={form.formState.errors.username?.message}
           pendoId={PENDO_IDS.settings.profile.username}
         />
         <TextInput
           {...form.register('jobTitle')}
-          label="Job title"
+          label={t('settings.profile.jobTitle')}
           error={form.formState.errors.jobTitle?.message}
           pendoId={PENDO_IDS.settings.profile.jobTitle}
         />
         <Select
-          label="Role"
-          placeholder="Select a role"
-          data={[...ROLE_OPTIONS]}
+          label={t('settings.profile.role')}
+          placeholder={t('settings.profile.rolePlaceholder')}
+          data={ROLE_OPTIONS.map((value) => ({
+            value,
+            label: t(`settings.profile.roles.${value.toLowerCase()}`),
+          }))}
           value={form.watch('role') ?? null}
           onChange={(value) => {
             // Mantine Select hands back `string | null`. Mirror the Step3CompanyPage
@@ -181,7 +186,7 @@ export function ProfileTab(): React.JSX.Element | null {
         />
         <TextInput
           {...form.register('location')}
-          label="Location"
+          label={t('settings.profile.location')}
           error={form.formState.errors.location?.message}
           pendoId={PENDO_IDS.settings.profile.location}
         />
@@ -192,7 +197,7 @@ export function ProfileTab(): React.JSX.Element | null {
             pendoId={PENDO_IDS.settings.profile.cancel}
             onClick={() => form.reset()}
           >
-            Discard changes
+            {t('settings.discardChanges')}
           </Button>
           <Button
             type="submit"
@@ -200,7 +205,7 @@ export function ProfileTab(): React.JSX.Element | null {
             disabled={!form.formState.isDirty}
             pendoId={PENDO_IDS.settings.profile.save}
           >
-            Save profile
+            {t('settings.profile.save')}
           </Button>
         </Group>
       </Stack>

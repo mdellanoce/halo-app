@@ -41,6 +41,7 @@ import React, { useState, useMemo } from 'react'
 import { Stack, Group, Title } from '@mantine/core'
 import { IconDownload } from '@tabler/icons-react'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
 import { useAuthStore } from '../../../auth/authStore'
@@ -55,6 +56,7 @@ import { exportTasksToCsv } from '../../../reports/csvExport'
 const DEFAULT_STATUS_FILTER: TaskStatus[] = ['todo', 'in_progress', 'done']
 
 export function ReportsPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const visitor = useAuthStore((s) => s.currentVisitor)
   const workspaceId = useAuthStore((s) => s.currentWorkspace?.id)
 
@@ -113,7 +115,7 @@ export function ReportsPage(): React.JSX.Element {
     <Stack gap="lg">
       {/* Page header — Title left, Export CSV right (D-23, UI-SPEC lines 638-651) */}
       <Group justify="space-between" align="center">
-        <Title order={3}>Reports</Title>
+        <Title order={3}>{t('reports.title')}</Title>
         <Button
           variant="outline"
           leftSection={<IconDownload size={16} />}
@@ -121,7 +123,7 @@ export function ReportsPage(): React.JSX.Element {
           onClick={() => exportTasksToCsv(filteredTasks)}
           disabled={filteredTasks.length === 0}
         >
-          Export CSV
+          {t('reports.exportCsv')}
         </Button>
       </Group>
 

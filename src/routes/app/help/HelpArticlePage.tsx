@@ -18,10 +18,12 @@
 
 import { Stack, Title, Text, Center, Anchor as MantineAnchor } from '@mantine/core'
 import { Link, useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
 import { getHelpArticleBySlug } from '../../../help/helpArticles'
 
 export function HelpArticlePage(): React.JSX.Element {
+  const { t } = useTranslation()
   const { slug } = useParams<{ slug: string }>()
   const article = slug ? getHelpArticleBySlug(slug) : undefined
 
@@ -29,9 +31,9 @@ export function HelpArticlePage(): React.JSX.Element {
     return (
       <Center mih={400}>
         <Stack align="center" gap="md">
-          <Title order={3}>Article not found</Title>
+          <Title order={3}>{t('help.article.notFoundTitle')}</Title>
           <Text c="dimmed" ta="center" maw={420}>
-            We couldn&apos;t find a help article at this URL. It may have been moved or removed.
+            {t('help.article.notFoundBody')}
           </Text>
           {/*
            * S3 polymorphic-Anchor exception: raw Mantine Anchor with
@@ -44,7 +46,7 @@ export function HelpArticlePage(): React.JSX.Element {
             to="/app/help"
             data-pendo-id={PENDO_IDS.help.article.detailBackLink}
           >
-            ← Back to Help
+            {t('help.article.backLink')}
           </MantineAnchor>
         </Stack>
       </Center>
@@ -75,7 +77,7 @@ export function HelpArticlePage(): React.JSX.Element {
         to="/app/help"
         data-pendo-id={PENDO_IDS.help.article.detailBackLink}
       >
-        ← Back to Help
+        {t('help.article.backLink')}
       </MantineAnchor>
     </Stack>
   )

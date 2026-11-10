@@ -1,0 +1,379 @@
+{
+  "common": {
+    "language": "Language",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "search": "Search",
+    "loading": "Loading…",
+    "create": "Create",
+    "back": "Back",
+    "next": "Next",
+    "continue": "Continue",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signUp": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "demoBanner": "Demo data only — never enter real credentials"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "lists": "Lists",
+    "reports": "Reports",
+    "team": "Team",
+    "settings": "Settings",
+    "help": "Help"
+  },
+  "topbar": {
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "preferences": {
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language",
+    "languageDescription": "Defaults to your browser language. Your choice is saved in this browser.",
+    "dangerZone": "Danger zone",
+    "dangerZoneBody": "Reset all demo data for this workspace. This will permanently delete all tasks, settings, and accounts in this browser, and sign you out.",
+    "resetDemoData": "Reset demo data"
+  },
+  "landing": {
+    "tagline": "A demo project and task management app. All data is fabricated and persisted only in your browser — safe to explore without entering real information.",
+    "signInLink": "Sign in (Phase 2)",
+    "signUpLink": "Sign up (Phase 2)"
+  },
+  "signin": {
+    "title": "Welcome back",
+    "invalidCredentials": "Email and password don't match. Try again.",
+    "emailPlaceholder": "you@example.com",
+    "noAccount": "Don't have an account?",
+    "createAccountLink": "Create one"
+  },
+  "signup": {
+    "title": "Create your Halo account",
+    "haveAccount": "Already have an account?",
+    "steps": {
+      "account": "Account",
+      "aboutYou": "About you",
+      "company": "Company",
+      "setup": "Setup"
+    },
+    "errors": {
+      "emailDuplicate": "An account with this email already exists.",
+      "usernameTaken": "That username is taken — try another.",
+      "generic": "Something went wrong — please try again."
+    },
+    "step1": {
+      "intro": "Welcome to Halo. Tell us who you are and we'll get your workspace ready.",
+      "emailPlaceholder": "you@example.com",
+      "emailDescription": "We'll use this for sign-in. No real emails ever leave your browser.",
+      "signInInstead": "Sign in instead?",
+      "passwordPlaceholder": "At least 8 characters",
+      "passwordDescription": "Hashed locally and stored in your browser — there is no server.",
+      "usernameLabel": "Username",
+      "usernameDescription": "Visible on your profile and team page."
+    },
+    "step2": {
+      "title": "A bit about you",
+      "jobTitleLabel": "Job title",
+      "jobTitlePlaceholder": "Senior product manager",
+      "roleLabel": "Role",
+      "rolePlaceholder": "Select your role",
+      "roles": {
+        "product": "Product",
+        "engineering": "Engineering",
+        "design": "Design",
+        "marketing": "Marketing",
+        "sales": "Sales",
+        "operations": "Operations",
+        "other": "Other"
+      },
+      "yearsExperienceLabel": "Years of experience",
+      "locationLabel": "Location",
+      "locationPlaceholder": "Berlin, Germany"
+    },
+    "step3": {
+      "title": "About your company",
+      "companyNameLabel": "Company name",
+      "companySizeLabel": "Company size",
+      "companySizePlaceholder": "Select team size",
+      "industryLabel": "Industry",
+      "industryPlaceholder": "Select an industry",
+      "industries": {
+        "software": "Software",
+        "financialServices": "Financial services",
+        "healthcare": "Healthcare",
+        "retail": "Retail / e-commerce",
+        "manufacturing": "Manufacturing",
+        "education": "Education",
+        "other": "Other"
+      },
+      "planLabel": "Plan",
+      "planPlaceholder": "Choose a plan",
+      "planDescription": "You can change this later in Settings.",
+      "plans": {
+        "free": "Free",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      }
+    },
+    "step4": {
+      "title": "Set up your workspace",
+      "useCaseLabel": "What will you use Halo for?",
+      "useCasePlaceholder": "Pick what fits best",
+      "useCases": {
+        "projectManagement": "Project management",
+        "taskTracking": "Task tracking",
+        "teamCoordination": "Team coordination",
+        "personalProductivity": "Personal productivity",
+        "justExploring": "Just exploring"
+      },
+      "teamSizeLabel": "How many people on your team?",
+      "goalsLabel": "What are you hoping to get out of Halo?",
+      "goalsPlaceholder": "Pick up to three",
+      "goalsDescription": "Select up to three.",
+      "goals": {
+        "shipFaster": "Ship faster",
+        "betterVisibility": "Better visibility",
+        "lessContextSwitching": "Less context switching",
+        "cleanerReporting": "Cleaner reporting",
+        "onboardTeam": "Onboard the team",
+        "replaceTool": "Replace another tool"
+      },
+      "createAccount": "Create account"
+    }
+  },
+  "dashboard": {
+    "range": {
+      "days": "{{days}}d"
+    },
+    "kpis": {
+      "active": "Active tasks",
+      "completedInRange": "Completed in range",
+      "overdue": "Overdue",
+      "completionRate": "Completion rate",
+      "avgCycleTime": "Avg cycle time",
+      "daysValue": "{{value}}d"
+    },
+    "charts": {
+      "completedPerDay": "Completed per day",
+      "completedSeries": "Completed",
+      "byStatus": "Tasks by status"
+    },
+    "activity": {
+      "title": "Recent activity",
+      "created": "{{name}} created \"{{title}}\"",
+      "updated": "{{name}} updated \"{{title}}\"",
+      "completed": "{{name}} completed \"{{title}}\""
+    },
+    "emptyState": {
+      "title": "No tasks yet",
+      "body": "Looks like your workspace is fresh. Head over to Lists to create your first task and see this dashboard come to life.",
+      "cta": "Go to Lists"
+    },
+    "relativeTime": {
+      "justNow": "Just now",
+      "minutesAgo": "{{n}}m ago",
+      "hoursAgo": "{{n}}h ago",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{n}}d ago"
+    }
+  },
+  "lists": {
+    "title": "Tasks",
+    "newTask": "New task",
+    "notifications": {
+      "deleted": "Task deleted"
+    }
+  },
+  "tasks": {
+    "status": {
+      "todo": "To do",
+      "in_progress": "In progress",
+      "done": "Done"
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "status": "Status",
+      "priority": "Priority",
+      "assignee": "Assignee",
+      "dueDate": "Due date"
+    },
+    "filters": {
+      "all": "All"
+    },
+    "form": {
+      "createTitle": "New task",
+      "editTitle": "Edit task",
+      "delete": "Delete task",
+      "discard": "Discard",
+      "submitCreate": "Create task",
+      "submitSave": "Save changes"
+    },
+    "notifications": {
+      "created": "Task created",
+      "saved": "Changes saved"
+    },
+    "deleteConfirm": {
+      "title": "Delete this task?",
+      "body": "Delete \"{{title}}\"? This cannot be undone.",
+      "confirm": "Delete task"
+    },
+    "emptyState": {
+      "title": "No tasks yet",
+      "body": "{{workspaceName}} doesn't have any tasks yet. Create your first task to get started.",
+      "cta": "Create your first task"
+    },
+    "filteredEmpty": {
+      "message": "No tasks match these filters.",
+      "clear": "Clear filters"
+    },
+    "table": {
+      "markComplete": "Mark \"{{title}}\" complete",
+      "actionsFor": "Actions for \"{{title}}\""
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "exportCsv": "Export CSV",
+    "chart": {
+      "title": "Tasks by status per day"
+    },
+    "table": {
+      "title": "Title",
+      "status": "Status",
+      "priority": "Priority",
+      "assignee": "Assignee",
+      "dueDate": "Due date",
+      "completedAt": "Completed at",
+      "empty": "No tasks match these filters."
+    },
+    "filters": {
+      "dateRange": "Date range",
+      "assignee": "Assignee",
+      "status": "Status",
+      "all": "All"
+    }
+  },
+  "team": {
+    "title": "Team",
+    "inviteTeammate": "Invite teammate",
+    "notifications": {
+      "roleUpdated": "Role updated"
+    },
+    "emptyState": {
+      "title": "No teammates yet",
+      "description": "Invite your first teammate to start collaborating on {{workspaceName}}."
+    },
+    "table": {
+      "name": "Name",
+      "role": "Role",
+      "lastActive": "Last active",
+      "invited": "Invited"
+    },
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member",
+      "viewer": "Viewer"
+    },
+    "invite": {
+      "role": "Role",
+      "submit": "Send invite",
+      "sentTitle": "Invite sent",
+      "sentMessage": "Sent to {{email}}",
+      "errors": {
+        "emailRequired": "Enter an email.",
+        "emailInvalid": "Enter a valid email.",
+        "roleRequired": "Pick a role.",
+        "duplicate": "{{email}} is already a teammate."
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "profile": "Profile",
+      "workspace": "Workspace",
+      "preferences": "Preferences"
+    },
+    "discardChanges": "Discard changes",
+    "errorTitle": "Something went wrong",
+    "errorMessage": "Please try again.",
+    "profile": {
+      "saved": "Profile saved",
+      "save": "Save profile",
+      "username": "Username",
+      "jobTitle": "Job title",
+      "role": "Role",
+      "rolePlaceholder": "Select a role",
+      "location": "Location",
+      "roles": {
+        "product": "Product",
+        "engineering": "Engineering",
+        "design": "Design",
+        "marketing": "Marketing",
+        "sales": "Sales",
+        "operations": "Operations",
+        "other": "Other"
+      }
+    },
+    "workspace": {
+      "saved": "Workspace saved",
+      "save": "Save workspace",
+      "companyName": "Company name",
+      "companySize": "Company size",
+      "companySizePlaceholder": "Select team size",
+      "industry": "Industry",
+      "industryPlaceholder": "Select an industry",
+      "plan": "Plan",
+      "planPlaceholder": "Choose a plan",
+      "industries": {
+        "software": "Software",
+        "financialServices": "Financial services",
+        "healthcare": "Healthcare",
+        "retail": "Retail / e-commerce",
+        "manufacturing": "Manufacturing",
+        "education": "Education",
+        "other": "Other"
+      },
+      "plans": {
+        "free": "Free",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      }
+    },
+    "resetModal": {
+      "title": "Reset demo data?",
+      "body": "This will permanently delete all tasks, settings, and accounts in this browser, and sign you out. This cannot be undone.",
+      "confirm": "Reset demo data"
+    }
+  },
+  "help": {
+    "title": "Help",
+    "searchPlaceholder": "Search articles",
+    "noResults": {
+      "message": "No articles match \"{{query}}\". Try a different keyword.",
+      "clear": "Clear search"
+    },
+    "article": {
+      "notFoundTitle": "Article not found",
+      "notFoundBody": "We couldn't find a help article at this URL. It may have been moved or removed.",
+      "backLink": "← Back to Help"
+    }
+  }
+}

@@ -25,6 +25,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Navigate, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Stack, Group, Title } from '@mantine/core'
 import { TextInput, Select, NumberInput, Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
@@ -46,7 +47,20 @@ const ROLE_OPTIONS = [
   'Other',
 ] as const
 
+// Catalog keys for the Role option labels. The option VALUE stays the English
+// enum string (it's what the schema + stored visitor record expect).
+const ROLE_LABEL_KEYS: Record<(typeof ROLE_OPTIONS)[number], string> = {
+  Product: 'signup.step2.roles.product',
+  Engineering: 'signup.step2.roles.engineering',
+  Design: 'signup.step2.roles.design',
+  Marketing: 'signup.step2.roles.marketing',
+  Sales: 'signup.step2.roles.sales',
+  Operations: 'signup.step2.roles.operations',
+  Other: 'signup.step2.roles.other',
+}
+
 export function Step2DetailsPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const draft = readWizardDraft()
 
@@ -88,20 +102,20 @@ export function Step2DetailsPage(): React.JSX.Element {
 
   return (
     <Stack gap="md">
-      <Title order={2}>A bit about you</Title>
+      <Title order={2}>{t('signup.step2.title')}</Title>
       <form onSubmit={onSubmit} noValidate>
         <Stack gap="md">
           <TextInput
             {...form.register('jobTitle')}
-            label="Job title"
-            placeholder="Senior product manager"
+            label={t('signup.step2.jobTitleLabel')}
+            placeholder={t('signup.step2.jobTitlePlaceholder')}
             error={form.formState.errors.jobTitle?.message}
             pendoId={PENDO_IDS.signup.step2.jobTitle}
           />
           <Select
-            label="Role"
-            placeholder="Select your role"
-            data={[...ROLE_OPTIONS]}
+            label={t('signup.step2.roleLabel')}
+            placeholder={t('signup.step2.rolePlaceholder')}
+            data={ROLE_OPTIONS.map((value) => ({ value, label: t(ROLE_LABEL_KEYS[value]) }))}
             value={form.watch('role') ?? null}
             onChange={(value) => {
               // Mantine's Select hands back `string | null`. On clear (null)
@@ -132,7 +146,7 @@ export function Step2DetailsPage(): React.JSX.Element {
             pendoId={PENDO_IDS.signup.step2.role}
           />
           <NumberInput
-            label="Years of experience"
+            label={t('signup.step2.yearsExperienceLabel')}
             placeholder="5"
             min={0}
             max={60}
@@ -164,8 +178,8 @@ export function Step2DetailsPage(): React.JSX.Element {
           />
           <TextInput
             {...form.register('location')}
-            label="Location"
-            placeholder="Berlin, Germany"
+            label={t('signup.step2.locationLabel')}
+            placeholder={t('signup.step2.locationPlaceholder')}
             error={form.formState.errors.location?.message}
             pendoId={PENDO_IDS.signup.step2.location}
           />
@@ -175,12 +189,12 @@ export function Step2DetailsPage(): React.JSX.Element {
               variant="default"
               onClick={onBack}
               pendoId={PENDO_IDS.signup.step2.back}
-            >Back</Button>
+            >{t('common.back')}</Button>
             <Button
               type="submit"
               loading={form.formState.isSubmitting}
               pendoId={PENDO_IDS.signup.step2.submit}
-            >Continue</Button>
+            >{t('common.continue')}</Button>
           </Group>
         </Stack>
       </form>

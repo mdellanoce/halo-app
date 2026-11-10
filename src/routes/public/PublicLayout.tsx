@@ -1,7 +1,9 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import { Container } from '@mantine/core'
+import { Container, Group } from '@mantine/core'
 import { DemoBanner } from '../../ui/DemoBanner'
+import { LanguageSwitcher } from '../../i18n/LanguageSwitcher'
+import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
 /**
  * Public layout — renders the persistent DemoBanner above all public routes.
@@ -21,6 +23,9 @@ export function PublicLayout(): React.JSX.Element {
     <>
       <DemoBanner />
       <Container size="lg" py="md">
+        <Group justify="flex-end">
+          <LanguageSwitcher pendoId={PENDO_IDS.layout.publicLanguageSwitcher} />
+        </Group>
         <Outlet />
       </Container>
     </>

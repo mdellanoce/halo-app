@@ -39,6 +39,7 @@
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router'
 import { Container, Stack, Paper, Title, Text, Alert } from '@mantine/core'
@@ -48,6 +49,7 @@ import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 import { signinSchema, type SigninValues, useAuthStore } from '../../auth'
 
 export function SignInPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   // Discriminated local state for the form-level credential error. Cleared on
   // every new submit attempt so the user can retry without the prior Alert
@@ -83,10 +85,10 @@ export function SignInPage(): React.JSX.Element {
   return (
     <Container size="sm" py="xl">
       <Stack gap="lg">
-        <Title order={1}>Welcome back</Title>
+        <Title order={1}>{t('signin.title')}</Title>
         {credError === 'invalid_credentials' && (
           <Alert icon={<IconAlertCircle size={18} />} color="red" variant="light">
-            Email and password don't match. Try again.
+            {t('signin.invalidCredentials')}
           </Alert>
         )}
         <Paper withBorder radius="md" p="xl">
@@ -94,14 +96,14 @@ export function SignInPage(): React.JSX.Element {
             <Stack gap="md">
               <TextInput
                 {...form.register('email')}
-                label="Email"
-                placeholder="you@example.com"
+                label={t('common.email')}
+                placeholder={t('signin.emailPlaceholder')}
                 error={form.formState.errors.email?.message}
                 pendoId={PENDO_IDS.signin.email}
               />
               <PasswordInput
                 {...form.register('password')}
-                label="Password"
+                label={t('common.password')}
                 error={form.formState.errors.password?.message}
                 pendoId={PENDO_IDS.signin.password}
               />
@@ -116,13 +118,13 @@ export function SignInPage(): React.JSX.Element {
                 loading={form.formState.isSubmitting}
                 pendoId={PENDO_IDS.signin.submit}
                 mt="xl"
-              >Sign in</Button>
+              >{t('common.signIn')}</Button>
             </Stack>
           </form>
         </Paper>
         <Text size="sm" c="dimmed" ta="center">
-          Don't have an account?{' '}
-          <Anchor href="/signup" pendoId={PENDO_IDS.signin.signupAnchor}>Create one</Anchor>
+          {t('signin.noAccount')}{' '}
+          <Anchor href="/signup" pendoId={PENDO_IDS.signin.signupAnchor}>{t('signin.createAccountLink')}</Anchor>
         </Text>
       </Stack>
     </Container>

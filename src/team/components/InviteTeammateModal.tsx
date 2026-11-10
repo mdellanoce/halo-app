@@ -32,6 +32,7 @@ import { z } from 'zod'
 import { Modal, Stack, Group } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { IconCheck } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 import { TextInput, Select, Button } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 import { createTeammate, findTeammateByEmail } from '../teamsRepo'
@@ -50,25 +51,31 @@ export function InviteTeammateModal({
   onSuccess,
   workspaceId,
 }: InviteTeammateModalProps): React.JSX.Element {
+  const { t } = useTranslation()
   // Local-form-schema per Phase 4 D-15. Defined inside useMemo so the closure
   // captures the current workspaceId for the .superRefine dedupe check (D-03).
   const InviteFormSchema = useMemo(
     () =>
       z
         .object({
-          email: z.string().min(1, 'Enter an email.').email('Enter a valid email.'),
-          workspaceRole: z.enum(['Admin', 'Member', 'Viewer'], { message: 'Pick a role.' }),
+          email: z
+            .string()
+            .min(1, t('team.invite.errors.emailRequired'))
+            .email(t('team.invite.errors.emailInvalid')),
+          workspaceRole: z.enum(['Admin', 'Member', 'Viewer'], {
+            message: t('team.invite.errors.roleRequired'),
+          }),
         })
         .superRefine((data, ctx) => {
           if (findTeammateByEmail(workspaceId, data.email)) {
             ctx.addIssue({
               code: 'custom',
               path: ['email'],
-              message: `${data.email} is already a teammate.`,
+              message: t('team.invite.errors.duplicate', { email: data.email }),
             })
           }
         }),
-    [workspaceId],
+    [workspaceId, t],
   )
 
   type InviteFormValues = z.infer<typeof InviteFormSchema>
@@ -111,8 +118,8 @@ export function InviteTeammateModal({
     })
 
     notifications.show({
-      title: 'Invite sent',
-      message: `Sent to ${values.email}`,
+      title: t('team.invite.sentTitle'),
+      message: t('team.invite.sentMessage', { email: values.email }),
       color: 'green',
       icon: <IconCheck size={18} />,
       autoClose: 3000,
@@ -126,7 +133,7 @@ export function InviteTeammateModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Invite teammate"
+      title={t('team.inviteTeammate')}
       size="md"
       centered
       keepMounted={false}
@@ -136,18 +143,18 @@ export function InviteTeammateModal({
         <Stack gap="md">
           <TextInput
             {...form.register('email')}
-            label="Email"
+            label={t('common.email')}
             type="email"
             required
             error={form.formState.errors.email?.message}
             pendoId={PENDO_IDS.team.invite.modalEmail}
           />
           <Select
-            label="Role"
+            label={t('team.invite.role')}
             data={[
-              { value: 'Admin', label: 'Admin' },
-              { value: 'Member', label: 'Member' },
-              { value: 'Viewer', label: 'Viewer' },
+              { value: 'Admin', label: t('team.roles.admin') },
+              { value: 'Member', label: t('team.roles.member') },
+              { value: 'Viewer', label: t('team.roles.viewer') },
             ]}
             value={form.watch('workspaceRole') ?? null}
             onChange={(value) => {
@@ -167,14 +174,14 @@ export function InviteTeammateModal({
             pendoId={PENDO_IDS.team.invite.modalCancel}
             onClick={onClose}
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             variant="filled"
             type="submit"
             pendoId={PENDO_IDS.team.invite.modalSubmit}
           >
-            Send invite
+            {t('team.invite.submit')}
           </Button>
         </Group>
       </form>

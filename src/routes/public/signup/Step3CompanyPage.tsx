@@ -34,6 +34,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Navigate, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Stack, Group, Title } from '@mantine/core'
 import { TextInput, Select, Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
@@ -65,7 +66,27 @@ const INDUSTRY_OPTIONS = [
 
 const PLAN_OPTIONS = ['Free', 'Pro', 'Enterprise'] as const
 
+// Catalog keys for the translatable option labels. Option VALUES stay the
+// English enum strings above (schema + stored workspace record expect them).
+// Company-size ranges are numeric and render as-is in every locale.
+const INDUSTRY_LABEL_KEYS: Record<(typeof INDUSTRY_OPTIONS)[number], string> = {
+  Software: 'signup.step3.industries.software',
+  'Financial services': 'signup.step3.industries.financialServices',
+  Healthcare: 'signup.step3.industries.healthcare',
+  'Retail / e-commerce': 'signup.step3.industries.retail',
+  Manufacturing: 'signup.step3.industries.manufacturing',
+  Education: 'signup.step3.industries.education',
+  Other: 'signup.step3.industries.other',
+}
+
+const PLAN_LABEL_KEYS: Record<(typeof PLAN_OPTIONS)[number], string> = {
+  Free: 'signup.step3.plans.free',
+  Pro: 'signup.step3.plans.pro',
+  Enterprise: 'signup.step3.plans.enterprise',
+}
+
 export function Step3CompanyPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const draft = readWizardDraft()
 
@@ -106,19 +127,19 @@ export function Step3CompanyPage(): React.JSX.Element {
 
   return (
     <Stack gap="md">
-      <Title order={2}>About your company</Title>
+      <Title order={2}>{t('signup.step3.title')}</Title>
       <form onSubmit={onSubmit} noValidate>
         <Stack gap="md">
           <TextInput
             {...form.register('companyName')}
-            label="Company name"
+            label={t('signup.step3.companyNameLabel')}
             placeholder="Acme Inc."
             error={form.formState.errors.companyName?.message}
             pendoId={PENDO_IDS.signup.step3.companyName}
           />
           <Select
-            label="Company size"
-            placeholder="Select team size"
+            label={t('signup.step3.companySizeLabel')}
+            placeholder={t('signup.step3.companySizePlaceholder')}
             data={[...COMPANY_SIZE_OPTIONS]}
             value={form.watch('companySize') ?? null}
             onChange={(value) => {
@@ -147,9 +168,9 @@ export function Step3CompanyPage(): React.JSX.Element {
             pendoId={PENDO_IDS.signup.step3.companySize}
           />
           <Select
-            label="Industry"
-            placeholder="Select an industry"
-            data={[...INDUSTRY_OPTIONS]}
+            label={t('signup.step3.industryLabel')}
+            placeholder={t('signup.step3.industryPlaceholder')}
+            data={INDUSTRY_OPTIONS.map((value) => ({ value, label: t(INDUSTRY_LABEL_KEYS[value]) }))}
             value={form.watch('industry') ?? null}
             onChange={(value) => {
               if (value === null) {
@@ -173,10 +194,10 @@ export function Step3CompanyPage(): React.JSX.Element {
             pendoId={PENDO_IDS.signup.step3.industry}
           />
           <Select
-            label="Plan"
-            placeholder="Choose a plan"
-            description="You can change this later in Settings."
-            data={[...PLAN_OPTIONS]}
+            label={t('signup.step3.planLabel')}
+            placeholder={t('signup.step3.planPlaceholder')}
+            description={t('signup.step3.planDescription')}
+            data={PLAN_OPTIONS.map((value) => ({ value, label: t(PLAN_LABEL_KEYS[value]) }))}
             value={form.watch('planTier') ?? null}
             onChange={(value) => {
               if (value === null) {
@@ -205,12 +226,12 @@ export function Step3CompanyPage(): React.JSX.Element {
               variant="default"
               onClick={onBack}
               pendoId={PENDO_IDS.signup.step3.back}
-            >Back</Button>
+            >{t('common.back')}</Button>
             <Button
               type="submit"
               loading={form.formState.isSubmitting}
               pendoId={PENDO_IDS.signup.step3.submit}
-            >Continue</Button>
+            >{t('common.continue')}</Button>
           </Group>
         </Stack>
       </form>

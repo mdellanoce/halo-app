@@ -12,6 +12,7 @@
 
 import { Center, Stack, Title, Text } from '@mantine/core'
 import { IconUsers } from '@tabler/icons-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 
@@ -24,20 +25,21 @@ export function TeamEmptyState({
   workspaceName,
   onInviteClick,
 }: TeamEmptyStateProps): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <Center mih={400} data-pendo-id={PENDO_IDS.team.emptyState.container}>
       <Stack align="center" gap="md">
         <IconUsers size={64} stroke={1.2} color="var(--mantine-color-gray-4)" />
-        <Title order={3}>No teammates yet</Title>
+        <Title order={3}>{t('team.emptyState.title')}</Title>
         <Text c="dimmed" ta="center" maw={420}>
-          Invite your first teammate to start collaborating on {workspaceName}.
+          {t('team.emptyState.description', { workspaceName })}
         </Text>
         <Button
           variant="filled"
           pendoId={PENDO_IDS.team.emptyState.cta}
           onClick={onInviteClick}
         >
-          Invite teammate
+          {t('team.inviteTeammate')}
         </Button>
       </Stack>
     </Center>

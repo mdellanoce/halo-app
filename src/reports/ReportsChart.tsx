@@ -31,6 +31,7 @@
 
 import { Paper, Text, useMantineTheme, useComputedColorScheme } from '@mantine/core'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
 import {
   BarChart,
   Bar,
@@ -60,6 +61,7 @@ type DayBucket = {
 }
 
 export function ReportsChart({ tasks, dateRange }: ReportsChartProps): React.JSX.Element {
+  const { t } = useTranslation()
   const theme = useMantineTheme()
   const computed = useComputedColorScheme('light')
 
@@ -107,7 +109,7 @@ export function ReportsChart({ tasks, dateRange }: ReportsChartProps): React.JSX
     <Paper withBorder p="md" radius="md">
       <div data-pendo-id={PENDO_IDS.reports.chart.statusByDay}>
         <Text fw={600} mb="md">
-          Tasks by status per day
+          {t('reports.chart.title')}
         </Text>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={dayBuckets} barCategoryGap="20%">
@@ -116,17 +118,17 @@ export function ReportsChart({ tasks, dateRange }: ReportsChartProps): React.JSX
             <YAxis allowDecimals={false} tick={{ fontSize: 14 }} />
             <Tooltip />
             <Legend wrapperStyle={{ fontSize: 14 }} />
-            <Bar dataKey="todo" stackId="status" name="To do" fill={colorTodo} />
+            <Bar dataKey="todo" stackId="status" name={t('tasks.status.todo')} fill={colorTodo} />
             <Bar
               dataKey="in_progress"
               stackId="status"
-              name="In progress"
+              name={t('tasks.status.in_progress')}
               fill={colorInProgress}
             />
             <Bar
               dataKey="done"
               stackId="status"
-              name="Done"
+              name={t('tasks.status.done')}
               fill={colorDone}
               radius={[4, 4, 0, 0]}
             />

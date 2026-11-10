@@ -44,6 +44,7 @@
  */
 
 import { Outlet, useLocation } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Container, Stepper, Paper, Title, Stack, Text } from '@mantine/core'
 import { Anchor } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
@@ -67,6 +68,7 @@ function pathToStepIndex(pathname: string): number {
 }
 
 export function SignupShell(): React.JSX.Element {
+  const { t } = useTranslation()
   const { pathname } = useLocation()
   const active = pathToStepIndex(pathname)
   const isIndex = pathname === '/signup' || pathname === '/signup/'
@@ -74,20 +76,20 @@ export function SignupShell(): React.JSX.Element {
   return (
     <Container size="sm" py="xl">
       <Stack gap="lg">
-        {isIndex && <Title order={1}>Create your Halo account</Title>}
+        {isIndex && <Title order={1}>{t('signup.title')}</Title>}
         <Stepper active={active} data-pendo-id={PENDO_IDS.signup.stepper}>
-          <Stepper.Step label="Account" />
-          <Stepper.Step label="About you" />
-          <Stepper.Step label="Company" />
-          <Stepper.Step label="Setup" />
+          <Stepper.Step label={t('signup.steps.account')} />
+          <Stepper.Step label={t('signup.steps.aboutYou')} />
+          <Stepper.Step label={t('signup.steps.company')} />
+          <Stepper.Step label={t('signup.steps.setup')} />
         </Stepper>
         <Paper withBorder radius="md" p="xl">
           <Outlet />
         </Paper>
         <Text size="sm" c="dimmed" ta="center">
-          Already have an account?{' '}
+          {t('signup.haveAccount')}{' '}
           <Anchor href="/signin" pendoId={PENDO_IDS.signup.step1.signinAnchor}>
-            Sign in
+            {t('common.signIn')}
           </Anchor>
         </Text>
       </Stack>

@@ -11,7 +11,12 @@
  * here at compile time (same discipline as z.infer in types.ts).
  */
 
+import type { TFunction } from 'i18next'
 import type { TaskStatus, TaskPriority } from './types'
+
+// English labels — kept for non-React consumers (e.g. CSV export). Screens
+// should use taskStatusLabel / taskPriorityLabel below so labels follow the
+// active locale.
 
 export const TASK_STATUS_LABELS: Record<TaskStatus, string> = {
   todo: 'To do',
@@ -24,6 +29,20 @@ export const TASK_PRIORITY_LABELS: Record<TaskPriority, string> = {
   medium: 'Medium',
   high: 'High',
   urgent: 'Urgent',
+}
+
+/**
+ * Translated display label for a status. Call at render time with the `t`
+ * from `useTranslation()` — never at module scope. Stored enum values are
+ * unchanged; only the label is localized (`tasks.status.<value>`).
+ */
+export function taskStatusLabel(t: TFunction, status: TaskStatus): string {
+  return t(`tasks.status.${status}`)
+}
+
+/** Translated display label for a priority (`tasks.priority.<value>`). */
+export function taskPriorityLabel(t: TFunction, priority: TaskPriority): string {
+  return t(`tasks.priority.${priority}`)
 }
 
 // ---------------------------------------------------------------------------

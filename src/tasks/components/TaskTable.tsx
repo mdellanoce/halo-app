@@ -41,6 +41,7 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import {
   Paper,
@@ -62,8 +63,8 @@ import {
 import { Checkbox } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
 import {
-  TASK_STATUS_LABELS,
-  TASK_PRIORITY_LABELS,
+  taskStatusLabel,
+  taskPriorityLabel,
   TASK_STATUS_BADGE_COLOR,
   TASK_PRIORITY_BADGE_COLOR,
 } from '../labels'
@@ -90,6 +91,7 @@ export function TaskTable({
   onDelete,
   onToggleComplete,
 }: TaskTableProps): React.JSX.Element {
+  const { t } = useTranslation()
   // Default order: createdAt desc (newest first). TanStack sees an empty
   // sorting array; this presorted slice IS the default. When a header is
   // clicked, TanStack's sorted row model takes over.
@@ -114,17 +116,17 @@ export function TaskTable({
             onChange={(e) => onToggleComplete(row.original, e.currentTarget.checked)}
             pendoId={PENDO_IDS.lists.row.completeToggle}
             taskId={row.original.id}
-            aria-label={`Mark "${row.original.title}" complete`}
+            aria-label={t('tasks.table.markComplete', { title: row.original.title })}
           />
         ),
         enableSorting: false,
       }),
       helper.accessor('title', {
-        header: 'Title',
+        header: t('tasks.fields.title'),
         cell: (info) => <Text size="sm">{info.getValue()}</Text>,
       }),
       helper.accessor('status', {
-        header: 'Status',
+        header: t('tasks.fields.status'),
         cell: (info) => {
           const status = info.getValue()
           return (
@@ -133,13 +135,13 @@ export function TaskTable({
               variant="light"
               size="sm"
             >
-              {TASK_STATUS_LABELS[status]}
+              {taskStatusLabel(t, status)}
             </Badge>
           )
         },
       }),
       helper.accessor('priority', {
-        header: 'Priority',
+        header: t('tasks.fields.priority'),
         cell: (info) => {
           const priority = info.getValue()
           return (
@@ -148,18 +150,18 @@ export function TaskTable({
               variant="light"
               size="sm"
             >
-              {TASK_PRIORITY_LABELS[priority]}
+              {taskPriorityLabel(t, priority)}
             </Badge>
           )
         },
       }),
       helper.accessor((row) => row.assignee?.name ?? '—', {
         id: 'assignee',
-        header: 'Assignee',
+        header: t('tasks.fields.assignee'),
         cell: (info) => <Text size="sm">{info.getValue()}</Text>,
       }),
       helper.accessor('dueDate', {
-        header: 'Due date',
+        header: t('tasks.fields.dueDate'),
         cell: (info) => {
           const value = info.getValue()
           return (
@@ -178,7 +180,7 @@ export function TaskTable({
         enableSorting: false,
       }),
     ],
-    [onEdit, onDelete, onToggleComplete],
+    [t, onEdit, onDelete, onToggleComplete],
   )
 
   const table = useReactTable({
@@ -264,6 +266,7 @@ function KebabMenu({
   onEdit: (task: Task) => void
   onDelete: (task: Task) => void
 }): React.JSX.Element {
+  const { t } = useTranslation()
   return (
     <Menu position="bottom-end" withinPortal>
       <Menu.Target>
@@ -272,7 +275,7 @@ function KebabMenu({
           color="gray"
           data-pendo-id={PENDO_IDS.lists.row.kebab}
           data-pendo-task-id={task.id}
-          aria-label={`Actions for "${task.title}"`}
+          aria-label={t('tasks.table.actionsFor', { title: task.title })}
         >
           <IconDotsVertical size={16} />
         </ActionIcon>
@@ -284,7 +287,7 @@ function KebabMenu({
           data-pendo-task-id={task.id}
           onClick={() => onEdit(task)}
         >
-          Edit
+          {t('common.edit')}
         </Menu.Item>
         <Menu.Item
           leftSection={<IconTrash size={16} />}
@@ -293,7 +296,7 @@ function KebabMenu({
           data-pendo-task-id={task.id}
           onClick={() => onDelete(task)}
         >
-          Delete
+          {t('common.delete')}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

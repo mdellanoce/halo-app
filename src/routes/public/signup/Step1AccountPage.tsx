@@ -28,6 +28,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Stack, Group, Title, Text } from '@mantine/core'
 import { TextInput, PasswordInput, Button, Anchor } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
@@ -41,9 +42,12 @@ import {
   setWizardPassword,
 } from '../../../auth'
 
-const EMAIL_DUPLICATE_MESSAGE = 'An account with this email already exists.'
+// RHF error `type` marking the email-collision case. Detection keys off the
+// type (not the message) so it survives a locale switch mid-form.
+const EMAIL_DUPLICATE_ERROR_TYPE = 'duplicate'
 
 export function Step1AccountPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const draft = readWizardDraft().step1 ?? {}
   const form = useForm<Step1Values>({
@@ -69,15 +73,18 @@ export function Step1AccountPage(): React.JSX.Element {
       // The inline `<Anchor>Sign in instead?</Anchor>` anchor cannot be embedded
       // inside a plain-string message. We set a string-only message here and
       // render the anchor conditionally on the field below via an isDuplicate
-      // boolean check against the locked copy.
-      form.setError('email', { type: 'manual', message: EMAIL_DUPLICATE_MESSAGE })
+      // boolean check against the error type.
+      form.setError('email', {
+        type: EMAIL_DUPLICATE_ERROR_TYPE,
+        message: t('signup.errors.emailDuplicate'),
+      })
       return
     }
     const usernameDup = findVisitorByUsername(values.username)
     if (usernameDup) {
       form.setError('username', {
         type: 'manual',
-        message: 'That username is taken — try another.',
+        message: t('signup.errors.usernameTaken'),
       })
       return
     }
@@ -92,30 +99,30 @@ export function Step1AccountPage(): React.JSX.Element {
   })
 
   const emailErr = form.formState.errors.email?.message
-  const isEmailDuplicate = emailErr === EMAIL_DUPLICATE_MESSAGE
+  const isEmailDuplicate = form.formState.errors.email?.type === EMAIL_DUPLICATE_ERROR_TYPE
 
   return (
     <Stack gap="md">
-      <Title order={2}>Create your Halo account</Title>
+      <Title order={2}>{t('signup.title')}</Title>
       <Text c="dimmed">
-        Welcome to Halo. Tell us who you are and we'll get your workspace ready.
+        {t('signup.step1.intro')}
       </Text>
       <form onSubmit={onSubmit} noValidate>
         <Stack gap="md">
           <TextInput
             {...form.register('email')}
-            label="Email"
-            placeholder="you@example.com"
-            description="We'll use this for sign-in. No real emails ever leave your browser."
+            label={t('common.email')}
+            placeholder={t('signup.step1.emailPlaceholder')}
+            description={t('signup.step1.emailDescription')}
             error={
               isEmailDuplicate ? (
                 <span>
-                  {EMAIL_DUPLICATE_MESSAGE}{' '}
+                  {t('signup.errors.emailDuplicate')}{' '}
                   <Anchor
                     href="/signin"
                     pendoId={PENDO_IDS.signup.step1.signinAnchor}
                   >
-                    Sign in instead?
+                    {t('signup.step1.signInInstead')}
                   </Anchor>
                 </span>
               ) : (
@@ -126,31 +133,31 @@ export function Step1AccountPage(): React.JSX.Element {
           />
           <PasswordInput
             {...form.register('password')}
-            label="Password"
-            placeholder="At least 8 characters"
-            description="Hashed locally and stored in your browser — there is no server."
+            label={t('common.password')}
+            placeholder={t('signup.step1.passwordPlaceholder')}
+            description={t('signup.step1.passwordDescription')}
             error={form.formState.errors.password?.message}
             pendoId={PENDO_IDS.signup.step1.password}
           />
           <TextInput
             {...form.register('firstName')}
-            label="First name"
+            label={t('common.firstName')}
             placeholder="Ada"
             error={form.formState.errors.firstName?.message}
             pendoId={PENDO_IDS.signup.step1.firstName}
           />
           <TextInput
             {...form.register('lastName')}
-            label="Last name"
+            label={t('common.lastName')}
             placeholder="Lovelace"
             error={form.formState.errors.lastName?.message}
             pendoId={PENDO_IDS.signup.step1.lastName}
           />
           <TextInput
             {...form.register('username')}
-            label="Username"
+            label={t('signup.step1.usernameLabel')}
             placeholder="ada"
-            description="Visible on your profile and team page."
+            description={t('signup.step1.usernameDescription')}
             error={form.formState.errors.username?.message}
             pendoId={PENDO_IDS.signup.step1.username}
           />
@@ -160,7 +167,7 @@ export function Step1AccountPage(): React.JSX.Element {
               type="submit"
               loading={form.formState.isSubmitting}
               pendoId={PENDO_IDS.signup.step1.submit}
-            >Continue</Button>
+            >{t('common.continue')}</Button>
           </Group>
         </Stack>
       </form>
