@@ -20,6 +20,7 @@ import { nanoid } from 'nanoid'
 import { K, readWithSchema, writeJSON } from '../storage'
 import { TasksArraySchema } from './schemas'
 import type { Task } from './types'
+import { trackEvent } from '../pendo/track'
 
 // ---------------------------------------------------------------------------
 // Input shape — explicit so TypeScript catches accidental field omissions
@@ -137,6 +138,19 @@ export function updateTask(
   const next = [...existing]
   next[idx] = updated
   writeJSON(K.tasks(workspaceId), next)
+
+  // Pendo Track Event: fires only on the →done edge (the same edge that
+  // stamps completedAt), so re-saving an already-done task never re-fires.
+  if (updated.status === 'done' && prevTaskStatus !== 'done') {
+    trackEvent('Task completed', {
+      previous_status: prevTaskStatus,
+      priority: updated.priority,
+      has_due_date: updated.dueDate != null,
+      days_open: Math.floor(
+        (Date.parse(updated.updatedAt) - Date.parse(updated.createdAt)) / 86_400_000,
+      ),
+    })
+  }
   return updated
 }
 

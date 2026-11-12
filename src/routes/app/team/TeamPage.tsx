@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { IconUserPlus, IconCheck } from '@tabler/icons-react'
 import { Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
+import { trackEvent } from '../../../pendo/track'
 import { useAuthStore } from '../../../auth/authStore'
 import { listTeammates, updateTeammate } from '../../../team/teamsRepo'
 import { TeamTable } from '../../../team/components/TeamTable'
@@ -51,7 +52,16 @@ export function TeamPage(): React.JSX.Element {
   if (!workspaceId || !visitor || !workspace) return <></>
 
   const handleRoleChange = (teammateId: string, nextRole: WorkspaceRole) => {
-    updateTeammate(workspaceId, teammateId, { workspaceRole: nextRole })
+    const previousRole = teammates.find((tm) => tm.id === teammateId)?.workspaceRole
+    const updated = updateTeammate(workspaceId, teammateId, { workspaceRole: nextRole })
+    if (updated) {
+      // Pendo Track Event: teammate's new workspace role saved.
+      trackEvent('Teammate role updated', {
+        new_role: nextRole,
+        previous_role: previousRole ?? null,
+        teammate_status: updated.status,
+      })
+    }
     notifications.show({
       title: t('team.notifications.roleUpdated'),
       message: '',

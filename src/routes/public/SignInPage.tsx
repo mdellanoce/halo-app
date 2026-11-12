@@ -46,6 +46,7 @@ import { Container, Stack, Paper, Title, Text, Alert } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import { TextInput, PasswordInput, Button, Anchor } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
+import { trackEvent } from '../../pendo/track'
 import { signinSchema, type SigninValues, useAuthStore } from '../../auth'
 
 export function SignInPage(): React.JSX.Element {
@@ -80,6 +81,8 @@ export function SignInPage(): React.JSX.Element {
     // defensive "missing workspace" branch into one variant — username
     // enumeration mitigation T-02-45 at the API surface).
     setCredError(result.reason)
+    // Pendo Track Event: credentials rejected, invalid credentials alert shown.
+    trackEvent('Sign in failed', { reason: result.reason })
   })
 
   return (

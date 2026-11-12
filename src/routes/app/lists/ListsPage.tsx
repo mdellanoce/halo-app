@@ -42,6 +42,7 @@ import { useTranslation } from 'react-i18next'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
+import { trackEvent } from '../../../pendo/track'
 import { useAuthStore } from '../../../auth/authStore'
 import { listTasks, updateTask, deleteTask } from '../../../tasks/tasksRepo'
 import type { Task } from '../../../tasks/types'
@@ -189,7 +190,15 @@ export function ListsPage(): React.JSX.Element {
         onClose={() => setDeleteTarget(null)}
         onConfirm={() => {
           if (deleteTarget) {
-            deleteTask(workspaceId, deleteTarget.id)
+            const deleted = deleteTask(workspaceId, deleteTarget.id)
+            if (deleted) {
+              // Pendo Track Event: task removed, deleted toast shown.
+              trackEvent('Task deleted', {
+                status: deleteTarget.status,
+                priority: deleteTarget.priority,
+                has_due_date: deleteTarget.dueDate != null,
+              })
+            }
             notifications.show({
               title: t('lists.notifications.deleted'),
               message: '',

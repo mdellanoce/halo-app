@@ -39,6 +39,9 @@ import { K, readWithSchema, writeJSON, MetaSchema, APP_VERSION, SCHEMA_VERSION }
 import type { Meta } from '../storage'
 import { seedTeammatesIfNeeded } from '../team/teamSeed'
 import { seedIfNeeded as seedTasksIfNeeded } from '../tasks/tasksSeed'
+import { listTasks } from '../tasks/tasksRepo'
+import { listTeammates } from '../team/teamsRepo'
+import { trackEvent } from '../pendo/track'
 
 // ---------------------------------------------------------------------------
 // Default meta constant (mirrors tasksSeed.ts + teamSeed.ts shape)
@@ -96,15 +99,19 @@ export function seedDemoData(workspaceId: string): void {
 
   // Step 2 (D-04 ordering): teammates BEFORE tasks. tasksSeed reads
   // K.teammates and maps Teammate → Assignee for the assignee field.
+  let seededTeammates = false
   if (!effectiveDomains.teammates) {
     seedTeammatesIfNeeded(workspaceId)
     effectiveDomains.teammates = new Date().toISOString()
+    seededTeammates = true
   }
 
   // Step 3: tasks — picks assignees from the just-written teammates.
+  let seededTasks = false
   if (!effectiveDomains.tasks) {
     seedTasksIfNeeded(workspaceId)
     effectiveDomains.tasks = new Date().toISOString()
+    seededTasks = true
   }
 
   // Step 4: Persist the merged meta record. Preserve the legacy seededAt
@@ -114,4 +121,16 @@ export function seedDemoData(workspaceId: string): void {
   const newSeededAt =
     meta.seededAt ?? effectiveDomains.teammates ?? effectiveDomains.tasks ?? null
   writeJSON(K.meta(), { ...meta, seededAt: newSeededAt, seededDomains: effectiveDomains })
+
+  // Pendo Track Event: fires only on the boot that actually seeds a domain.
+  // The meta ledger written above gates every later call, so repeat mounts
+  // (and StrictMode's double effect run) never re-fire it.
+  if (seededTeammates || seededTasks) {
+    trackEvent('Demo workspace seeded', {
+      seeded_teammates: seededTeammates,
+      seeded_tasks: seededTasks,
+      teammate_count: listTeammates(workspaceId).length,
+      task_count: listTasks(workspaceId).length,
+    })
+  }
 }

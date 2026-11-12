@@ -37,6 +37,7 @@ import {
 } from './authRepo'
 import { verifyPassword } from './passwordHash'
 import { clearWizardDraft } from './wizardSession'
+import { trackAfterIdentify } from '../pendo/track'
 
 // TODO Phase 4+: subscribe to window.storage events for cross-tab session sync.
 // Phase 2 UI-SPEC does not require multi-tab session revocation; Plan 01-03's
@@ -116,6 +117,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     get().setSession(visitor, workspace)
+    // Pendo Track Event: credentials accepted (returning session). Deferred
+    // until PendoBridge has identified the signed-in visitor.
+    trackAfterIdentify('Signed in', {
+      method: 'credentials',
+      role: visitor.role,
+      plan_tier: workspace.planTier,
+    })
     return { ok: true }
   },
 

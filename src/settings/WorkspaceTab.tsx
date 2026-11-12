@@ -39,6 +39,7 @@ import { useTranslation } from 'react-i18next'
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react'
 import { TextInput, Select, Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
+import { trackEvent } from '../pendo/track'
 import {
   WorkspaceSchema,
   updateWorkspace,
@@ -116,6 +117,20 @@ export function WorkspaceTab(): React.JSX.Element | null {
         color: 'green',
         icon: <IconCheck size={18} />,
         autoClose: 3000,
+      })
+      // Pendo Track Event: workspace changes saved. A planTier change is the
+      // simulated upgrade or downgrade.
+      const changedFields = (Object.keys(values) as (keyof WorkspaceFormValues)[]).filter(
+        (key) => values[key] !== workspace[key],
+      )
+      trackEvent('Workspace saved', {
+        changed_fields: changedFields.join(','),
+        changed_field_count: changedFields.length,
+        plan_tier: updated.planTier,
+        previous_plan_tier: workspace.planTier,
+        plan_tier_changed: updated.planTier !== workspace.planTier,
+        company_size: updated.companySize,
+        industry: updated.industry,
       })
       form.reset(values)
       // SET-05 deferred to Phase 6 — pendo.identify (or pendo.updateOptions

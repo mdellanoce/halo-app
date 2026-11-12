@@ -49,6 +49,7 @@ import {
   Button,
 } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
+import { trackEvent } from '../../pendo/track'
 import {
   TaskFormSchema,
   TaskStatusEnum,
@@ -188,7 +189,15 @@ export function TaskFormModal({
 
   const onSubmit = form.handleSubmit((values) => {
     if (mode === 'create') {
-      createTask(workspaceId, { ...values, completedAt: null })
+      const created = createTask(workspaceId, { ...values, completedAt: null })
+      // Pendo Track Event: new task saved, Task created toast shown.
+      trackEvent('Task created', {
+        status: created.status,
+        priority: created.priority,
+        has_description: created.description.trim() !== '',
+        has_due_date: created.dueDate != null,
+        assigned_to_self: created.assignee.id === visitor.id,
+      })
       notifications.show({
         title: t('tasks.notifications.created'),
         message: '',
@@ -197,7 +206,25 @@ export function TaskFormModal({
         autoClose: 3000,
       })
     } else if (initialTask) {
-      updateTask(workspaceId, initialTask.id, values)
+      const updated = updateTask(workspaceId, initialTask.id, values)
+      if (updated) {
+        // Pendo Track Event: task changes saved, Changes saved toast shown.
+        const changedFields = [
+          values.title !== initialTask.title && 'title',
+          values.description !== initialTask.description && 'description',
+          values.status !== initialTask.status && 'status',
+          values.priority !== initialTask.priority && 'priority',
+          values.assignee.id !== initialTask.assignee.id && 'assignee',
+          values.dueDate !== initialTask.dueDate && 'due_date',
+        ].filter((f): f is string => typeof f === 'string')
+        trackEvent('Task updated', {
+          changed_fields: changedFields.join(','),
+          changed_field_count: changedFields.length,
+          status: updated.status,
+          priority: updated.priority,
+          status_changed: values.status !== initialTask.status,
+        })
+      }
       notifications.show({
         title: t('tasks.notifications.saved'),
         message: '',

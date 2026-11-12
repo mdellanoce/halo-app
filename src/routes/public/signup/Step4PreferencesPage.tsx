@@ -30,6 +30,7 @@ import { Stack, Group, Title, Alert } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import { Select, NumberInput, MultiSelect, Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
+import { trackAfterIdentify } from '../../../pendo/track'
 import {
   step1Schema,
   step2Schema,
@@ -193,6 +194,18 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // Sign the user in — Plan 02-05's signInFromVisitor writes
       // halo:v1:session and updates the in-memory store atomically.
       useAuthStore.getState().signInFromVisitor(visitor, workspace)
+
+      // Pendo Track Event: signup funnel conversion. Deferred until
+      // PendoBridge has identified the new visitor + workspace.
+      trackAfterIdentify('Account created', {
+        role: visitor.role,
+        primary_use_case: visitor.primaryUseCase,
+        team_size: visitor.teamSize,
+        top_goals_count: visitor.topGoals.length,
+        plan_tier: workspace.planTier,
+        company_size: workspace.companySize,
+        industry: workspace.industry,
+      })
 
       // Clear the wizard draft — the plaintext-password retention window
       // (T-02-17) ends here. sessionStorage[halo:v1:signup:draft] is removed.

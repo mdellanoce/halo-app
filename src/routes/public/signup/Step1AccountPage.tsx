@@ -32,6 +32,7 @@ import { useTranslation } from 'react-i18next'
 import { Stack, Group, Title, Text } from '@mantine/core'
 import { TextInput, PasswordInput, Button, Anchor } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
+import { trackEvent } from '../../../pendo/track'
 import {
   step1Schema,
   type Step1Values,
@@ -78,6 +79,11 @@ export function Step1AccountPage(): React.JSX.Element {
         type: EMAIL_DUPLICATE_ERROR_TYPE,
         message: t('signup.errors.emailDuplicate'),
       })
+      // Pendo Track Event: signup stopped by an existing email.
+      trackEvent('Signup blocked by duplicate email or username', {
+        duplicate_field: 'email',
+        signup_step: 1,
+      })
       return
     }
     const usernameDup = findVisitorByUsername(values.username)
@@ -85,6 +91,11 @@ export function Step1AccountPage(): React.JSX.Element {
       form.setError('username', {
         type: 'manual',
         message: t('signup.errors.usernameTaken'),
+      })
+      // Pendo Track Event: signup stopped by an existing username.
+      trackEvent('Signup blocked by duplicate email or username', {
+        duplicate_field: 'username',
+        signup_step: 1,
       })
       return
     }

@@ -73,6 +73,7 @@ import { Modal, Group, Text } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
+import { trackEvent } from '../pendo/track'
 import { K } from '../storage/keys'
 
 export type ResetDemoDataModalProps = {
@@ -118,6 +119,12 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
     //    lock — theme preference survives reset). This is the ONLY localStorage
     //    key deliberately preserved across the reset because Mantine owns it
     //    and it lives outside the halo:v* envelope by design.
+
+    // Pendo Track Event: demo data wiped. Fired before the hard reload; the
+    // Pendo agent flushes queued events on page unload.
+    trackEvent('Demo data reset', {
+      removed_key_count: keysToRemove.length,
+    })
 
     // 4. Hard reload — re-runs boot sequence with clean state.
     window.location.href = '/'

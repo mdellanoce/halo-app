@@ -35,6 +35,7 @@ import { IconCheck } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, Select, Button } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
+import { trackEvent } from '../../pendo/track'
 import { createTeammate, findTeammateByEmail } from '../teamsRepo'
 
 export type InviteTeammateModalProps = {
@@ -106,7 +107,7 @@ export function InviteTeammateModal({
       .map((seg) => seg.charAt(0).toUpperCase() + seg.slice(1).toLowerCase())
       .join(' ')
 
-    createTeammate(workspaceId, {
+    const invited = createTeammate(workspaceId, {
       firstName,
       lastName: '',
       email: values.email.toLowerCase(),
@@ -115,6 +116,12 @@ export function InviteTeammateModal({
       lastActiveAt: null,
       invitedAt: new Date().toISOString(),
       avatar: null,
+    })
+
+    // Pendo Track Event: teammate added with Invited status.
+    trackEvent('Teammate invited', {
+      workspace_role: invited.workspaceRole,
+      status: invited.status,
     })
 
     notifications.show({

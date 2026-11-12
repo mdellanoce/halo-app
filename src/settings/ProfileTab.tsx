@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next'
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react'
 import { TextInput, Select, Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
+import { trackEvent } from '../pendo/track'
 import {
   VisitorSchema,
   updateVisitor,
@@ -105,6 +106,15 @@ export function ProfileTab(): React.JSX.Element | null {
         color: 'green',
         icon: <IconCheck size={18} />,
         autoClose: 3000,
+      })
+      // Pendo Track Event: profile changes saved.
+      const changedFields = (Object.keys(values) as (keyof ProfileFormValues)[]).filter(
+        (key) => values[key] !== visitor[key],
+      )
+      trackEvent('Profile saved', {
+        changed_fields: changedFields.join(','),
+        changed_field_count: changedFields.length,
+        role: updated.role,
       })
       // Re-base form's defaultValues so isDirty flips back to false until
       // the next edit. Without this, Save would stay enabled after a save.
