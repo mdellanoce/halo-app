@@ -31,6 +31,7 @@
 import dayjs from 'dayjs'
 import type { Task } from '../tasks/types'
 import { TASK_STATUS_LABELS, TASK_PRIORITY_LABELS } from '../tasks/labels'
+import { trackEvent } from '../pendo/track'
 
 /**
  * RFC 4180 quoter: wrap `value` in `"..."` iff it contains a comma, newline, or
@@ -84,4 +85,9 @@ export function exportTasksToCsv(tasks: Task[]): void {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
+  // Pendo Track Event: CSV built and the browser download started.
+  trackEvent('Report CSV downloaded', {
+    row_count: tasks.length,
+    file_size_bytes: blob.size,
+  })
 }

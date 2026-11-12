@@ -39,6 +39,7 @@ import { useTranslation } from 'react-i18next'
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react'
 import { TextInput, Select, Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
+import { trackEvent } from '../pendo/track'
 import {
   WorkspaceSchema,
   updateWorkspace,
@@ -107,9 +108,23 @@ export function WorkspaceTab(): React.JSX.Element | null {
   })
 
   const onSubmit = form.handleSubmit((values) => {
+    const previous = workspace
     const updated = updateWorkspace(workspace.id, values)
     if (updated) {
       useAuthStore.setState({ currentWorkspace: updated })
+      // Pendo Track Event: workspace changes written (toast follows). Plan
+      // tier changes act as a simulated upgrade or downgrade; PendoBridge
+      // re-identifies with the new account metadata.
+      trackEvent('Workspace saved', {
+        fields_changed: (Object.keys(values) as (keyof WorkspaceFormValues)[]).filter(
+          (key) => values[key] !== previous[key],
+        ),
+        plan_tier: updated.planTier,
+        previous_plan_tier: previous.planTier,
+        plan_changed: updated.planTier !== previous.planTier,
+        company_size: updated.companySize,
+        industry: updated.industry,
+      })
       notifications.show({
         title: t('settings.workspace.saved'),
         message: '',

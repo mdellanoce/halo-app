@@ -39,6 +39,9 @@ import { K, readWithSchema, writeJSON, MetaSchema, APP_VERSION, SCHEMA_VERSION }
 import type { Meta } from '../storage'
 import { seedTeammatesIfNeeded } from '../team/teamSeed'
 import { seedIfNeeded as seedTasksIfNeeded } from '../tasks/tasksSeed'
+import { listTeammates } from '../team/teamsRepo'
+import { listTasks } from '../tasks/tasksRepo'
+import { trackEventAfterIdentify } from '../pendo/track'
 
 // ---------------------------------------------------------------------------
 // Default meta constant (mirrors tasksSeed.ts + teamSeed.ts shape)
@@ -96,15 +99,19 @@ export function seedDemoData(workspaceId: string): void {
 
   // Step 2 (D-04 ordering): teammates BEFORE tasks. tasksSeed reads
   // K.teammates and maps Teammate → Assignee for the assignee field.
+  let seededTeammates = false
   if (!effectiveDomains.teammates) {
     seedTeammatesIfNeeded(workspaceId)
     effectiveDomains.teammates = new Date().toISOString()
+    seededTeammates = true
   }
 
   // Step 3: tasks — picks assignees from the just-written teammates.
+  let seededTasks = false
   if (!effectiveDomains.tasks) {
     seedTasksIfNeeded(workspaceId)
     effectiveDomains.tasks = new Date().toISOString()
+    seededTasks = true
   }
 
   // Step 4: Persist the merged meta record. Preserve the legacy seededAt
@@ -114,4 +121,17 @@ export function seedDemoData(workspaceId: string): void {
   const newSeededAt =
     meta.seededAt ?? effectiveDomains.teammates ?? effectiveDomains.tasks ?? null
   writeJSON(K.meta(), { ...meta, seededAt: newSeededAt, seededDomains: effectiveDomains })
+
+  // Pendo Track Event: fires only when this call actually seeded a domain. The
+  // persisted meta ledger above gates later calls, so this fires once per
+  // workspace. Queued until PendoBridge identifies the account because the
+  // first /app mount runs this effect before the identify effect.
+  if (seededTeammates || seededTasks) {
+    trackEventAfterIdentify(workspaceId, 'Workspace seeded with demo data', {
+      seeded_teammates: seededTeammates,
+      seeded_tasks: seededTasks,
+      teammate_count: listTeammates(workspaceId).length,
+      task_count: listTasks(workspaceId).length,
+    })
+  }
 }

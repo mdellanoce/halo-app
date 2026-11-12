@@ -19,6 +19,7 @@ import { useEffect, useRef, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../auth/authStore'
 import { getActiveLocale } from '../i18n'
+import { markPendoIdentified } from './track'
 
 export function PendoBridge({ children }: { children: ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
@@ -60,9 +61,13 @@ export function PendoBridge({ children }: { children: ReactNode }) {
           createdAt: currentWorkspace.createdAt,
         },
       })
+      // Flush track events queued during sign-in / signup so they attach to
+      // the identified visitor + account instead of the anonymous visitor.
+      markPendoIdentified(currentWorkspace.id)
       wasAuthenticated.current = true
     } else if (!isAuthenticated && wasAuthenticated.current) {
       pendo.clearSession()
+      markPendoIdentified(null)
       wasAuthenticated.current = false
     }
   }, [isAuthenticated, currentVisitor, currentWorkspace, locale])

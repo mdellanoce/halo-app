@@ -42,6 +42,7 @@ import { useTranslation } from 'react-i18next'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
+import { trackEvent } from '../../../pendo/track'
 import { useAuthStore } from '../../../auth/authStore'
 import { listTasks, updateTask, deleteTask } from '../../../tasks/tasksRepo'
 import type { Task } from '../../../tasks/types'
@@ -146,11 +147,21 @@ export function ListsPage(): React.JSX.Element {
               onEdit={(task) => setEditTask(task)}
               onDelete={(task) => setDeleteTarget(task)}
               onToggleComplete={(task, nextDone) => {
-                updateTask(workspaceId, task.id, {
+                const updated = updateTask(workspaceId, task.id, {
                   // Off-toggle: restore prior non-done status if recorded;
                   // fall back to 'todo' for legacy tasks without prevStatus.
                   status: nextDone ? 'done' : (task.prevStatus ?? 'todo'),
                 })
+                // Pendo Track Event: fires only on the not-done → done edge
+                // (the repo stamps completedAt at that same transition).
+                if (updated && nextDone && task.status !== 'done') {
+                  trackEvent('Task completed', {
+                    previous_status: task.status,
+                    priority: task.priority,
+                    has_due_date: Boolean(task.dueDate),
+                    assigned_to_self: task.assignee?.id === visitor.id,
+                  })
+                }
                 refresh()
               }}
             />
@@ -189,7 +200,15 @@ export function ListsPage(): React.JSX.Element {
         onClose={() => setDeleteTarget(null)}
         onConfirm={() => {
           if (deleteTarget) {
-            deleteTask(workspaceId, deleteTarget.id)
+            const deleted = deleteTask(workspaceId, deleteTarget.id)
+            if (deleted) {
+              // Pendo Track Event: task removed (deletion toast follows).
+              trackEvent('Task deleted', {
+                status: deleteTarget.status,
+                priority: deleteTarget.priority,
+                has_due_date: Boolean(deleteTarget.dueDate),
+              })
+            }
             notifications.show({
               title: t('lists.notifications.deleted'),
               message: '',

@@ -17,8 +17,9 @@
  * failure so the user can retry. Plaintext password lives in sessionStorage
  * until clearWizardDraft runs — mitigation of T-02-17 from the threat model.
  *
- * No `pendo.*` runtime is invoked; `data-pendo-id` markup is inert until
- * Phase 6 retrofits the agent.
+ * On success, queues the `Account created` Pendo Track Event via
+ * `trackEventAfterIdentify` so it is sent once PendoBridge identifies the new
+ * visitor + account.
  */
 
 import { useState } from 'react'
@@ -30,6 +31,7 @@ import { Stack, Group, Title, Alert } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import { Select, NumberInput, MultiSelect, Button } from '../../../ui/primitives'
 import { PENDO_IDS } from '../../../pendo/PENDO_IDS'
+import { trackEventAfterIdentify } from '../../../pendo/track'
 import {
   step1Schema,
   step2Schema,
@@ -193,6 +195,19 @@ export function Step4PreferencesPage(): React.JSX.Element {
       // Sign the user in — Plan 02-05's signInFromVisitor writes
       // halo:v1:session and updates the in-memory store atomically.
       useAuthStore.getState().signInFromVisitor(visitor, workspace)
+
+      // Pendo Track Event: registration conversion. Queued until PendoBridge
+      // identifies the new visitor + account so it isn't sent as anonymous.
+      trackEventAfterIdentify(workspace.id, 'Account created', {
+        role: visitor.role,
+        years_experience: visitor.yearsExperience,
+        primary_use_case: visitor.primaryUseCase,
+        team_size: visitor.teamSize,
+        top_goals: visitor.topGoals,
+        company_size: workspace.companySize,
+        industry: workspace.industry,
+        plan_tier: workspace.planTier,
+      })
 
       // Clear the wizard draft — the plaintext-password retention window
       // (T-02-17) ends here. sessionStorage[halo:v1:signup:draft] is removed.

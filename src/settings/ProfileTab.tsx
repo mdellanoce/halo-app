@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next'
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react'
 import { TextInput, Select, Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
+import { trackEvent } from '../pendo/track'
 import {
   VisitorSchema,
   updateVisitor,
@@ -96,9 +97,19 @@ export function ProfileTab(): React.JSX.Element | null {
   })
 
   const onSubmit = form.handleSubmit((values) => {
+    const previous = visitor
     const updated = updateVisitor(visitor.id, values)
     if (updated) {
       useAuthStore.setState({ currentVisitor: updated })
+      // Pendo Track Event: profile changes written (toast follows). Field
+      // names only, never values. PendoBridge re-identifies with the new
+      // visitor metadata because currentVisitor changed.
+      trackEvent('Profile saved', {
+        fields_changed: (Object.keys(values) as (keyof ProfileFormValues)[]).filter(
+          (key) => values[key] !== previous[key],
+        ),
+        role: updated.role,
+      })
       notifications.show({
         title: t('settings.profile.saved'),
         message: '',

@@ -73,6 +73,7 @@ import { Modal, Group, Text } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/primitives'
 import { PENDO_IDS } from '../pendo/PENDO_IDS'
+import { trackEvent } from '../pendo/track'
 import { K } from '../storage/keys'
 
 export type ResetDemoDataModalProps = {
@@ -120,6 +121,12 @@ export function ResetDemoDataModal({ opened, onClose }: ResetDemoDataModalProps)
     //    and it lives outside the halo:v* envelope by design.
 
     // 4. Hard reload — re-runs boot sequence with clean state.
+    //
+    // Pendo Track Event: Halo data and signup draft are wiped. Fired before
+    // the navigation so the agent sends it from the current page.
+    trackEvent('Demo data reset', {
+      keys_removed: keysToRemove.length,
+    })
     window.location.href = '/'
   }
 

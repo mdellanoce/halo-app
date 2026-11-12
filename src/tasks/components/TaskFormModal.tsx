@@ -49,6 +49,7 @@ import {
   Button,
 } from '../../ui/primitives'
 import { PENDO_IDS } from '../../pendo/PENDO_IDS'
+import { trackEvent } from '../../pendo/track'
 import {
   TaskFormSchema,
   TaskStatusEnum,
@@ -188,7 +189,15 @@ export function TaskFormModal({
 
   const onSubmit = form.handleSubmit((values) => {
     if (mode === 'create') {
-      createTask(workspaceId, { ...values, completedAt: null })
+      const created = createTask(workspaceId, { ...values, completedAt: null })
+      // Pendo Track Event: task saved (confirmation toast follows).
+      trackEvent('Task created', {
+        status: created.status,
+        priority: created.priority,
+        has_description: created.description.trim() !== '',
+        has_due_date: Boolean(created.dueDate),
+        assigned_to_self: created.assignee.id === visitor.id,
+      })
       notifications.show({
         title: t('tasks.notifications.created'),
         message: '',
@@ -197,7 +206,21 @@ export function TaskFormModal({
         autoClose: 3000,
       })
     } else if (initialTask) {
-      updateTask(workspaceId, initialTask.id, values)
+      const updated = updateTask(workspaceId, initialTask.id, values)
+      if (updated) {
+        // Pendo Track Event: edits saved (confirmation toast follows).
+        const fieldsChanged = (Object.keys(values) as (keyof TaskFormValues)[]).filter(
+          (key) => JSON.stringify(values[key]) !== JSON.stringify(initialTask[key]),
+        )
+        trackEvent('Task updated', {
+          fields_changed: fieldsChanged,
+          status: updated.status,
+          previous_status: initialTask.status,
+          priority: updated.priority,
+          has_due_date: Boolean(updated.dueDate),
+          assigned_to_self: updated.assignee.id === visitor.id,
+        })
+      }
       notifications.show({
         title: t('tasks.notifications.saved'),
         message: '',
