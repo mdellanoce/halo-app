@@ -1,7 +1,7 @@
 /**
  * i18n bootstrap — i18next + react-i18next.
  *
- * Supported locales: `en` (default / fallback), `es`, `fr`.
+ * Supported locales: `en` (default / fallback), `es`, `fr`, `it`.
  * Catalogs live in `src/locales/<locale>.json` (single `translation` namespace).
  *
  * Active locale resolution (i18next-browser-languagedetector):
@@ -21,8 +21,9 @@ import { initReactI18next } from 'react-i18next'
 import en from '../locales/en.json'
 import es from '../locales/es.json'
 import fr from '../locales/fr.json'
+import it from '../locales/it.json'
 
-export const SUPPORTED_LOCALES = ['en', 'es', 'fr'] as const
+export const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'it'] as const
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
 export const DEFAULT_LOCALE: SupportedLocale = 'en'
 export const LOCALE_STORAGE_KEY = 'halo.locale'
@@ -32,6 +33,7 @@ export const LOCALE_LABELS: Record<SupportedLocale, string> = {
   en: 'English',
   es: 'Español',
   fr: 'Français',
+  it: 'Italiano',
 }
 
 void i18n
@@ -42,6 +44,7 @@ void i18n
       en: { translation: en },
       es: { translation: es },
       fr: { translation: fr },
+      it: { translation: it },
     },
     // Regional browser codes resolve to their base language (es-MX → es,
     // fr-CA → fr) and anything else to `en`, so i18n.language — and what the
