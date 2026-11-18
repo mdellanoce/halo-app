@@ -1,0 +1,379 @@
+{
+  "common": {
+    "language": "Lingua",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "search": "Cerca",
+    "loading": "Caricamento…",
+    "create": "Crea",
+    "back": "Indietro",
+    "next": "Avanti",
+    "continue": "Continua",
+    "signIn": "Accedi",
+    "signOut": "Esci",
+    "signUp": "Registrati",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "demoBanner": "Solo dati dimostrativi — non inserire mai credenziali reali"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "lists": "Liste",
+    "reports": "Report",
+    "team": "Team",
+    "settings": "Impostazioni",
+    "help": "Aiuto"
+  },
+  "topbar": {
+    "profile": "Profilo",
+    "settings": "Impostazioni"
+  },
+  "preferences": {
+    "theme": "Tema",
+    "themeLight": "Chiaro",
+    "themeDark": "Scuro",
+    "themeSystem": "Sistema",
+    "language": "Lingua",
+    "languageDescription": "Per impostazione predefinita usa la lingua del browser. La tua scelta viene salvata in questo browser.",
+    "dangerZone": "Zona pericolosa",
+    "dangerZoneBody": "Reimposta tutti i dati dimostrativi di questo workspace. Verranno eliminati definitivamente tutte le attività, le impostazioni e gli account in questo browser e verrai disconnesso.",
+    "resetDemoData": "Reimposta dati dimostrativi"
+  },
+  "landing": {
+    "tagline": "Un'app dimostrativa per la gestione di progetti e attività. Tutti i dati sono fittizi e salvati solo nel tuo browser: puoi esplorarla senza inserire informazioni reali.",
+    "signInLink": "Accedi (Fase 2)",
+    "signUpLink": "Registrati (Fase 2)"
+  },
+  "signin": {
+    "title": "Bentornato",
+    "invalidCredentials": "Email e password non corrispondono. Riprova.",
+    "emailPlaceholder": "tu@esempio.com",
+    "noAccount": "Non hai un account?",
+    "createAccountLink": "Creane uno"
+  },
+  "signup": {
+    "title": "Crea il tuo account Halo",
+    "haveAccount": "Hai già un account?",
+    "steps": {
+      "account": "Account",
+      "aboutYou": "Su di te",
+      "company": "Azienda",
+      "setup": "Configurazione"
+    },
+    "errors": {
+      "emailDuplicate": "Esiste già un account con questa email.",
+      "usernameTaken": "Questo nome utente è già in uso: provane un altro.",
+      "generic": "Qualcosa è andato storto: riprova."
+    },
+    "step1": {
+      "intro": "Benvenuto in Halo. Dicci chi sei e prepareremo il tuo workspace.",
+      "emailPlaceholder": "tu@esempio.com",
+      "emailDescription": "La useremo per l'accesso. Nessuna email reale lascia mai il tuo browser.",
+      "signInInstead": "Vuoi accedere?",
+      "passwordPlaceholder": "Almeno 8 caratteri",
+      "passwordDescription": "Salvata come hash in locale nel tuo browser: non c'è alcun server.",
+      "usernameLabel": "Nome utente",
+      "usernameDescription": "Visibile sul tuo profilo e nella pagina del team."
+    },
+    "step2": {
+      "title": "Qualcosa su di te",
+      "jobTitleLabel": "Qualifica",
+      "jobTitlePlaceholder": "Senior product manager",
+      "roleLabel": "Ruolo",
+      "rolePlaceholder": "Seleziona il tuo ruolo",
+      "roles": {
+        "product": "Prodotto",
+        "engineering": "Ingegneria",
+        "design": "Design",
+        "marketing": "Marketing",
+        "sales": "Vendite",
+        "operations": "Operazioni",
+        "other": "Altro"
+      },
+      "yearsExperienceLabel": "Anni di esperienza",
+      "locationLabel": "Località",
+      "locationPlaceholder": "Milano, Italia"
+    },
+    "step3": {
+      "title": "La tua azienda",
+      "companyNameLabel": "Nome dell'azienda",
+      "companySizeLabel": "Dimensione dell'azienda",
+      "companySizePlaceholder": "Seleziona la dimensione del team",
+      "industryLabel": "Settore",
+      "industryPlaceholder": "Seleziona un settore",
+      "industries": {
+        "software": "Software",
+        "financialServices": "Servizi finanziari",
+        "healthcare": "Sanità",
+        "retail": "Vendita al dettaglio / e-commerce",
+        "manufacturing": "Produzione",
+        "education": "Istruzione",
+        "other": "Altro"
+      },
+      "planLabel": "Piano",
+      "planPlaceholder": "Scegli un piano",
+      "planDescription": "Potrai cambiarlo in seguito nelle Impostazioni.",
+      "plans": {
+        "free": "Gratuito",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      }
+    },
+    "step4": {
+      "title": "Configura il tuo workspace",
+      "useCaseLabel": "Per cosa userai Halo?",
+      "useCasePlaceholder": "Scegli l'opzione più adatta",
+      "useCases": {
+        "projectManagement": "Gestione di progetti",
+        "taskTracking": "Monitoraggio delle attività",
+        "teamCoordination": "Coordinamento del team",
+        "personalProductivity": "Produttività personale",
+        "justExploring": "Sto solo esplorando"
+      },
+      "teamSizeLabel": "Quante persone ci sono nel tuo team?",
+      "goalsLabel": "Cosa speri di ottenere con Halo?",
+      "goalsPlaceholder": "Scegline fino a tre",
+      "goalsDescription": "Seleziona fino a tre.",
+      "goals": {
+        "shipFaster": "Rilasciare più in fretta",
+        "betterVisibility": "Maggiore visibilità",
+        "lessContextSwitching": "Meno cambi di contesto",
+        "cleanerReporting": "Report più chiari",
+        "onboardTeam": "Coinvolgere il team",
+        "replaceTool": "Sostituire un altro strumento"
+      },
+      "createAccount": "Crea account"
+    }
+  },
+  "dashboard": {
+    "range": {
+      "days": "{{days}}g"
+    },
+    "kpis": {
+      "active": "Attività attive",
+      "completedInRange": "Completate nel periodo",
+      "overdue": "In ritardo",
+      "completionRate": "Tasso di completamento",
+      "avgCycleTime": "Tempo di ciclo medio",
+      "daysValue": "{{value}}g"
+    },
+    "charts": {
+      "completedPerDay": "Completate al giorno",
+      "completedSeries": "Completate",
+      "byStatus": "Attività per stato"
+    },
+    "activity": {
+      "title": "Attività recente",
+      "created": "{{name}} ha creato \"{{title}}\"",
+      "updated": "{{name}} ha aggiornato \"{{title}}\"",
+      "completed": "{{name}} ha completato \"{{title}}\""
+    },
+    "emptyState": {
+      "title": "Ancora nessuna attività",
+      "body": "Sembra che il tuo workspace sia nuovo. Vai a Liste per creare la tua prima attività e dare vita a questa dashboard.",
+      "cta": "Vai a Liste"
+    },
+    "relativeTime": {
+      "justNow": "Adesso",
+      "minutesAgo": "{{n}} min fa",
+      "hoursAgo": "{{n}} h fa",
+      "yesterday": "Ieri",
+      "daysAgo": "{{n}}g fa"
+    }
+  },
+  "lists": {
+    "title": "Attività",
+    "newTask": "Nuova attività",
+    "notifications": {
+      "deleted": "Attività eliminata"
+    }
+  },
+  "tasks": {
+    "status": {
+      "todo": "Da fare",
+      "in_progress": "In corso",
+      "done": "Completata"
+    },
+    "priority": {
+      "low": "Bassa",
+      "medium": "Media",
+      "high": "Alta",
+      "urgent": "Urgente"
+    },
+    "fields": {
+      "title": "Titolo",
+      "description": "Descrizione",
+      "status": "Stato",
+      "priority": "Priorità",
+      "assignee": "Assegnatario",
+      "dueDate": "Scadenza"
+    },
+    "filters": {
+      "all": "Tutte"
+    },
+    "form": {
+      "createTitle": "Nuova attività",
+      "editTitle": "Modifica attività",
+      "delete": "Elimina attività",
+      "discard": "Scarta",
+      "submitCreate": "Crea attività",
+      "submitSave": "Salva modifiche"
+    },
+    "notifications": {
+      "created": "Attività creata",
+      "saved": "Modifiche salvate"
+    },
+    "deleteConfirm": {
+      "title": "Eliminare questa attività?",
+      "body": "Eliminare \"{{title}}\"? L'operazione non può essere annullata.",
+      "confirm": "Elimina attività"
+    },
+    "emptyState": {
+      "title": "Ancora nessuna attività",
+      "body": "{{workspaceName}} non ha ancora attività. Crea la tua prima attività per iniziare.",
+      "cta": "Crea la tua prima attività"
+    },
+    "filteredEmpty": {
+      "message": "Nessuna attività corrisponde a questi filtri.",
+      "clear": "Cancella filtri"
+    },
+    "table": {
+      "markComplete": "Segna \"{{title}}\" come completata",
+      "actionsFor": "Azioni per \"{{title}}\""
+    }
+  },
+  "reports": {
+    "title": "Report",
+    "exportCsv": "Esporta CSV",
+    "chart": {
+      "title": "Attività per stato al giorno"
+    },
+    "table": {
+      "title": "Titolo",
+      "status": "Stato",
+      "priority": "Priorità",
+      "assignee": "Assegnatario",
+      "dueDate": "Scadenza",
+      "completedAt": "Completata il",
+      "empty": "Nessuna attività corrisponde a questi filtri."
+    },
+    "filters": {
+      "dateRange": "Intervallo di date",
+      "assignee": "Assegnatario",
+      "status": "Stato",
+      "all": "Tutti"
+    }
+  },
+  "team": {
+    "title": "Team",
+    "inviteTeammate": "Invita un collega",
+    "notifications": {
+      "roleUpdated": "Ruolo aggiornato"
+    },
+    "emptyState": {
+      "title": "Ancora nessun collega",
+      "description": "Invita il tuo primo collega per iniziare a collaborare su {{workspaceName}}."
+    },
+    "table": {
+      "name": "Nome",
+      "role": "Ruolo",
+      "lastActive": "Ultimo accesso",
+      "invited": "Invitato"
+    },
+    "roles": {
+      "owner": "Proprietario",
+      "admin": "Amministratore",
+      "member": "Membro",
+      "viewer": "Visualizzatore"
+    },
+    "invite": {
+      "role": "Ruolo",
+      "submit": "Invia invito",
+      "sentTitle": "Invito inviato",
+      "sentMessage": "Inviato a {{email}}",
+      "errors": {
+        "emailRequired": "Inserisci un'email.",
+        "emailInvalid": "Inserisci un'email valida.",
+        "roleRequired": "Scegli un ruolo.",
+        "duplicate": "{{email}} fa già parte del team."
+      }
+    }
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "tabs": {
+      "profile": "Profilo",
+      "workspace": "Workspace",
+      "preferences": "Preferenze"
+    },
+    "discardChanges": "Scarta modifiche",
+    "errorTitle": "Qualcosa è andato storto",
+    "errorMessage": "Riprova.",
+    "profile": {
+      "saved": "Profilo salvato",
+      "save": "Salva profilo",
+      "username": "Nome utente",
+      "jobTitle": "Qualifica",
+      "role": "Ruolo",
+      "rolePlaceholder": "Seleziona un ruolo",
+      "location": "Località",
+      "roles": {
+        "product": "Prodotto",
+        "engineering": "Ingegneria",
+        "design": "Design",
+        "marketing": "Marketing",
+        "sales": "Vendite",
+        "operations": "Operazioni",
+        "other": "Altro"
+      }
+    },
+    "workspace": {
+      "saved": "Workspace salvato",
+      "save": "Salva workspace",
+      "companyName": "Nome dell'azienda",
+      "companySize": "Dimensione dell'azienda",
+      "companySizePlaceholder": "Seleziona la dimensione del team",
+      "industry": "Settore",
+      "industryPlaceholder": "Seleziona un settore",
+      "plan": "Piano",
+      "planPlaceholder": "Scegli un piano",
+      "industries": {
+        "software": "Software",
+        "financialServices": "Servizi finanziari",
+        "healthcare": "Sanità",
+        "retail": "Vendita al dettaglio / e-commerce",
+        "manufacturing": "Produzione",
+        "education": "Istruzione",
+        "other": "Altro"
+      },
+      "plans": {
+        "free": "Gratuito",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      }
+    },
+    "resetModal": {
+      "title": "Reimpostare i dati dimostrativi?",
+      "body": "Verranno eliminati definitivamente tutte le attività, le impostazioni e gli account in questo browser e verrai disconnesso. L'operazione non può essere annullata.",
+      "confirm": "Reimposta dati dimostrativi"
+    }
+  },
+  "help": {
+    "title": "Aiuto",
+    "searchPlaceholder": "Cerca articoli",
+    "noResults": {
+      "message": "Nessun articolo corrisponde a \"{{query}}\". Prova con un'altra parola chiave.",
+      "clear": "Cancella ricerca"
+    },
+    "article": {
+      "notFoundTitle": "Articolo non trovato",
+      "notFoundBody": "Non abbiamo trovato alcun articolo di aiuto a questo indirizzo. Potrebbe essere stato spostato o rimosso.",
+      "backLink": "← Torna all'Aiuto"
+    }
+  }
+}
